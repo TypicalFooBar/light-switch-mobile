@@ -1,0 +1,14 @@
+<ion-view view-title="Light Switch">
+	<ion-content>
+        <div class="row" ng-repeat="lightSwitch in lightSwitches">
+            <div class="col">
+                <div class="row">
+                    <img class="button-img" ng-src="{{lightSwitch.active && 'img/light-on-96.png' || 'img/light-off-96.png'}}">
+                </div>
+                <div class="row">
+                    <h1 class="button-text">{{lightSwitch.name}}</h1>
+                </div>
+            </div>
+        </div>
+	</ion-content>
+</ion-view>
