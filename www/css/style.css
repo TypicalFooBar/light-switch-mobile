@@ -10,6 +10,8 @@ ion-content {
     display: block;
     margin-left: auto;
     margin-right: auto;
+    width: 76px;
+    height: 76px;
 }
 
 .light-on {
