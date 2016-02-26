@@ -3,7 +3,7 @@ angular.module('light-switch-mobile.controllers', [])
 // Add the global variables to the rootScope
 .run(function($rootScope) {
     // Set root-scope variables
-    $rootScope.lightSwitchUrl = '192.168.1.116';
+    $rootScope.lightSwitchUrl = 'http://192.168.1.116';
 })
 
 // Factory used to store/retrieve data from localStorage

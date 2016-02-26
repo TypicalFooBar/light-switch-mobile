@@ -1,6 +1,6 @@
 <ion-view view-title="Light Switch">
 	<ion-content>
-        <div class="row" ng-repeat="lightSwitch in lightSwitches">
+        <div class="row" ng-click="lightSwitchClicked(lightSwitch)" ng-repeat="lightSwitch in lightSwitchList">
             <div class="col">
                 <div class="row">
                     <img class="button-img" ng-src="{{lightSwitch.active && 'img/light-on-96.png' || 'img/light-off-96.png'}}">
