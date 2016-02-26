@@ -18,7 +18,7 @@ angular.module('light-switch-mobile.controllers')
     
     $scope.lightSwitchClicked = function(lightSwitch) {
         // Toggle the light switch
-        lightSwitch.active = !lightSwitch;
+        lightSwitch.active = !lightSwitch.active;
         
         // Stringify the light switch
         var lightSwitchJsonString = angular.toJson(lightSwitch);
