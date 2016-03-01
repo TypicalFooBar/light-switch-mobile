@@ -27,6 +27,7 @@ angular.module('light-switch-mobile', ['ionic', 'light-switch-mobile.controllers
 .config(function ($stateProvider, $urlRouterProvider) {
     // Home
     $stateProvider.state('home', {
+        cache: false,
         url: '/home',
         templateUrl: 'templates/home.html',
         controller: 'HomeController'

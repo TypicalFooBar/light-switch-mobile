@@ -1,9 +1,12 @@
 angular.module('light-switch-mobile.controllers')
 
-.controller('EditController', function($scope, $rootScope, $http, $localStorage) {
+.controller('EditController', function($scope, $rootScope, $http, $q, $ionicHistory, $ionicNavBarDelegate, $ionicLoading, $localStorage) {
     $scope.lightSwitchList = null;
+    $scope.lightSwitchOriginalNames = [];
     
     $scope.init = function() {
+        $ionicNavBarDelegate.showBackButton(true);
+        
         $scope.getLightSwitchList();
     };
     
@@ -11,32 +14,49 @@ angular.module('light-switch-mobile.controllers')
         $http.get($rootScope.lightSwitchUrl + "/api/light-switch?action=getLightSwitchList")
         .then(function success(response) {
             $scope.lightSwitchList = response.data;
+            
+            // Set the original names
+            angular.forEach($scope.lightSwitchList, function(lightSwitch, key) {
+                $scope.lightSwitchOriginalNames.push(lightSwitch.name);
+            });
         }, function error(response) {
             
         });
     };
     
-    // $scope.lightSwitchClicked = function(lightSwitch) {
-    //     // Toggle the light switch
-    //     lightSwitch.active = !lightSwitch.active;
-    //     
-    //     // Stringify the light switch
-    //     var lightSwitchJsonString = angular.toJson(lightSwitch);
-    //     
-    //     // Update the server
-    //     $http({
-    //         url: $rootScope.lightSwitchUrl + "/api/light-switch?action=updateLightSwitch",
-    //         method: "GET",
-    //         params: {
-    //             lightSwitch: lightSwitchJsonString
-    //         }
-    //     })
-    //     .then(function success(response) {
-    //         var i = 0;
-    //     }, function error(response) {
-    //         var i = 0;
-    //     });
-    // };
+    $scope.updateLightSwitches = function() {
+        // Show a loading overlay
+        $ionicLoading.show({
+            template: 'Updating...'
+        });
+        
+        var httpCalls = [];
+        
+        for (var i = 0; i < $scope.lightSwitchList.length; ++i) {
+            if ($scope.lightSwitchList[i].name != $scope.lightSwitchOriginalNames[i]) {
+                var httpCall = $http({
+                    url: $rootScope.lightSwitchUrl + "/api/light-switch?action=updateLightSwitch",
+                    method: "GET",
+                    params: {
+                        lightSwitch: angular.toJson($scope.lightSwitchList[i])
+                    }
+                })
+                .then(function success(response) {
+                    
+                }, function error(response) {
+                    
+                });
+                
+                httpCalls.push(httpCall);
+            }
+        };
+        
+        // Once all http calls have completed
+        $q.all(httpCalls).then(function() {
+            $ionicHistory.goBack();
+            $ionicLoading.hide();
+        });
+    };
     
     $scope.init();
 });
