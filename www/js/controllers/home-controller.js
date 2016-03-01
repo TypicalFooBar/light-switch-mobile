@@ -1,18 +1,40 @@
 angular.module('light-switch-mobile.controllers')
 
-.controller('HomeController', function($scope, $rootScope, $http) {
+.controller('HomeController', function($scope, $rootScope, $http, $ionicLoading) {
     $scope.lightSwitchList = null;
+    $scope.loadingDataFromLightSwitchServer = false;
+    $scope.loadFromServerFailed = false;
     
     $scope.init = function() {
+        // Show a loading overlay
+        $ionicLoading.show({
+            template: 'Loading...'
+        });
+        
         $scope.getLightSwitchList();
     };
     
     $scope.getLightSwitchList = function() {
+        $scope.loadingDataFromLightSwitchServer = true;
+        
         $http.get($rootScope.lightSwitchServer.url() + "/api/light-switch?action=getLightSwitchList")
         .then(function success(response) {
+            // Set the light switch list
             $scope.lightSwitchList = response.data;
-        }, function error(response) {
             
+            // Stop showing the loading overlay
+            $ionicLoading.hide();
+            
+            // We're no longer loading data from the server
+            $scope.loadingDataFromLightSwitchServer = false;
+        }, function error(response) {
+            // We're no longer loading data from the server
+            $scope.loadingDataFromLightSwitchServer = false;
+            
+            // Stop showing the loading overlay
+            $ionicLoading.hide();
+            
+            $scope.loadFromServerFailed = true;
         });
     };
     
