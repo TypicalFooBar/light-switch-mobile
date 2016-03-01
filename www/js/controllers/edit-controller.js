@@ -4,6 +4,12 @@ angular.module('light-switch-mobile.controllers')
     $scope.lightSwitchList = null;
     $scope.lightSwitchOriginalNames = [];
     
+    $scope.lightSwitchServer = {
+        protocol: $localStorage.get($rootScope.localStorageKeys.lightSwitchServer.protocol, 'http'),
+        address: $localStorage.get($rootScope.localStorageKeys.lightSwitchServer.address, '192.168.1.116'),
+        port: $localStorage.get($rootScope.localStorageKeys.lightSwitchServer.port, '80')
+    }
+    
     $scope.init = function() {
         $ionicNavBarDelegate.showBackButton(true);
         
@@ -11,7 +17,7 @@ angular.module('light-switch-mobile.controllers')
     };
     
     $scope.getLightSwitchList = function() {
-        $http.get($rootScope.lightSwitchUrl + "/api/light-switch?action=getLightSwitchList")
+        $http.get($rootScope.lightSwitchServer.url() + "/api/light-switch?action=getLightSwitchList")
         .then(function success(response) {
             $scope.lightSwitchList = response.data;
             
@@ -27,29 +33,38 @@ angular.module('light-switch-mobile.controllers')
     $scope.updateLightSwitches = function() {
         // Show a loading overlay
         $ionicLoading.show({
-            template: 'Updating...'
+            template: 'Saving...'
         });
         
+        // List to store the http calls, so we know when they all have finished
         var httpCalls = [];
         
-        for (var i = 0; i < $scope.lightSwitchList.length; ++i) {
-            if ($scope.lightSwitchList[i].name != $scope.lightSwitchOriginalNames[i]) {
-                var httpCall = $http({
-                    url: $rootScope.lightSwitchUrl + "/api/light-switch?action=updateLightSwitch",
-                    method: "GET",
-                    params: {
-                        lightSwitch: angular.toJson($scope.lightSwitchList[i])
-                    }
-                })
-                .then(function success(response) {
+        // Update the Server Settings
+        $localStorage.set($rootScope.localStorageKeys.lightSwitchServer.protocol, $scope.lightSwitchServer.protocol);
+        $localStorage.set($rootScope.localStorageKeys.lightSwitchServer.address, $scope.lightSwitchServer.address);
+        $localStorage.set($rootScope.localStorageKeys.lightSwitchServer.port, $scope.lightSwitchServer.port);
+        
+        // Make sure the light switch list is NOT null
+        if ($scope.lightSwitchList != null) {
+            for (var i = 0; i < $scope.lightSwitchList.length; ++i) {
+                if ($scope.lightSwitchList[i].name != $scope.lightSwitchOriginalNames[i]) {
+                    var httpCall = $http({
+                        url: $rootScope.lightSwitchServer.url() + "/api/light-switch?action=updateLightSwitch",
+                        method: "GET",
+                        params: {
+                            lightSwitch: angular.toJson($scope.lightSwitchList[i])
+                        }
+                    })
+                    .then(function success(response) {
+                        
+                    }, function error(response) {
+                        
+                    });
                     
-                }, function error(response) {
-                    
-                });
-                
-                httpCalls.push(httpCall);
-            }
-        };
+                    httpCalls.push(httpCall);
+                }
+            };
+        }
         
         // Once all http calls have completed
         $q.all(httpCalls).then(function() {

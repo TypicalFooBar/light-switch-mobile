@@ -1,6 +1,6 @@
 angular.module('light-switch-mobile.controllers')
 
-.controller('HomeController', function($scope, $rootScope, $http, $localStorage) {
+.controller('HomeController', function($scope, $rootScope, $http) {
     $scope.lightSwitchList = null;
     
     $scope.init = function() {
@@ -8,7 +8,7 @@ angular.module('light-switch-mobile.controllers')
     };
     
     $scope.getLightSwitchList = function() {
-        $http.get($rootScope.lightSwitchUrl + "/api/light-switch?action=getLightSwitchList")
+        $http.get($rootScope.lightSwitchServer.url() + "/api/light-switch?action=getLightSwitchList")
         .then(function success(response) {
             $scope.lightSwitchList = response.data;
         }, function error(response) {
@@ -25,7 +25,7 @@ angular.module('light-switch-mobile.controllers')
         
         // Update the server
         $http({
-            url: $rootScope.lightSwitchUrl + "/api/light-switch?action=updateLightSwitch",
+            url: $rootScope.lightSwitchServer.url() + "/api/light-switch?action=updateLightSwitch",
             method: "GET",
             params: {
                 lightSwitch: lightSwitchJsonString

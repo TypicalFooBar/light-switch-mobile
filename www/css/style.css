@@ -36,3 +36,11 @@ textarea, input[type="text"] {
     color: #FFFFFF;
     background-color: #1B1B1E;
 }
+
+h2 {
+    color: #FFFFFF;
+}
+
+.item-stacked-label {
+    border-color: rgb(68, 68, 68);
+}
