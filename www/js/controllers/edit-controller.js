@@ -1,6 +1,6 @@
 angular.module('light-switch-mobile.controllers')
 
-.controller('EditController', function($scope, $rootScope, $http, $q, $ionicHistory, $ionicNavBarDelegate, $ionicLoading, $localStorage) {
+.controller('EditController', function($scope, $rootScope, $http, $q, $ionicHistory, $ionicNavBarDelegate, $ionicLoading, $localStorage, $ionicPopup) {
     $scope.lightSwitchList = null;
     $scope.lightSwitchOriginalNames = [];
     
@@ -71,6 +71,38 @@ angular.module('light-switch-mobile.controllers')
             $ionicHistory.goBack();
             $ionicLoading.hide();
         });
+    };
+    
+    $scope.startService = function() {
+        window.LightSwitchServicePlugin.startService(
+            function(response) { // Success
+                $ionicPopup.alert({
+                    title: 'Service Response',
+                    template: response.message
+                });
+            },
+            function(response) { // Error
+                $ionicPopup.alert({
+                    title: 'Service Response',
+                    template: response.message
+                });
+            });
+    };
+    
+    $scope.stopService = function() {
+        window.LightSwitchServicePlugin.stopService(
+            function(response) { // Success
+                $ionicPopup.alert({
+                    title: 'Service Response',
+                    template: response.message
+                });
+            },
+            function(response) { // Error
+                $ionicPopup.alert({
+                    title: 'Service Response',
+                    template: response.message
+                });
+            });
     };
     
     $scope.init();
