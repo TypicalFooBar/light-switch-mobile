@@ -8,6 +8,9 @@ angular.module('light-switch-mobile.controllers', [])
             protocol: 'lightSwitchServerProtocol',
             address: 'lightSwitchServerAddress',
             port: 'lightSwitchServerPort'
+        },
+        lightSwitchService: {
+            wifiName: 'lightSwitchServiceWifiName'
         }
     };
     

@@ -8,16 +8,19 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import android.util.Log;
+import android.content.Intent;
 
 public class LightSwitchServicePlugin extends CordovaPlugin
 {
     private CallbackContext callbackContext = null;
+    private Intent serviceIntent = null;
     
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException
     {
         // Log info
         Log.d("LightSwitchServicePlugin", "execute() start");
+        Log.d("LightSwitchServicePlugin", args.toString());
         
         // Set the callback context
         this.callbackContext = callbackContext;
@@ -25,7 +28,8 @@ public class LightSwitchServicePlugin extends CordovaPlugin
         // Check the action
         if(action.equals("start-service"))
         {
-            this.startService();
+            String wifiName = args.getString(0);
+            this.startService(wifiName);
             
             JSONObject response = new JSONObject();
             response.put("message", "Light Switch Service Started");
@@ -60,10 +64,16 @@ public class LightSwitchServicePlugin extends CordovaPlugin
         return false;
     }
     
-    private void startService()
+    private void startService(String wifiName)
     {
         // Log info
         Log.d("LightSwitchServicePlugin", "startService() start");
+        Log.d("LightSwitchServicePlugin", "WifiName: " + wifiName);
+        
+        // Start the service
+        this.serviceIntent = new Intent(this.cordova.getActivity().getBaseContext(), LightSwitchService.class);
+        serviceIntent.putExtra("wifiName", wifiName);
+        this.cordova.getActivity().startService(serviceIntent);
         
         // Log info
         Log.d("LightSwitchServicePlugin", "startService() end");
@@ -73,6 +83,10 @@ public class LightSwitchServicePlugin extends CordovaPlugin
     {
         // Log info
         Log.d("LightSwitchServicePlugin", "stopService() start");
+        
+        // Stop the service
+        this.cordova.getActivity().stopService(this.serviceIntent);
+        this.serviceIntent = null;
         
         // Log info
         Log.d("LightSwitchServicePlugin", "stopService() end");

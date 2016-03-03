@@ -21,5 +21,7 @@
         </config-file>
         
         <source-file src="src/android/LightSwitchServicePlugin.java" target-dir="src/com/typicalfoobar/lightswitch" />
+        <source-file src="src/android/LightSwitchService.java" target-dir="src/com/typicalfoobar/lightswitch" />
+        <source-file src="src/android/WifiChangedBroadcastReceiver.java" target-dir="src/com/typicalfoobar/lightswitch" />
     </platform>
 </plugin>

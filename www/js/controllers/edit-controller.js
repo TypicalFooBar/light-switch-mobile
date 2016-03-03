@@ -8,6 +8,11 @@ angular.module('light-switch-mobile.controllers')
         protocol: $localStorage.get($rootScope.localStorageKeys.lightSwitchServer.protocol, 'http'),
         address: $localStorage.get($rootScope.localStorageKeys.lightSwitchServer.address, '192.168.1.116'),
         port: $localStorage.get($rootScope.localStorageKeys.lightSwitchServer.port, '80')
+    };
+    
+    $scope.lightSwitchService = {
+        wifiName: $localStorage.get($rootScope.localStorageKeys.lightSwitchService.wifiName, ''),
+        turnOnLightsWhenConnectingToWifi: false
     }
     
     $scope.init = function() {
@@ -30,7 +35,7 @@ angular.module('light-switch-mobile.controllers')
         });
     };
     
-    $scope.updateLightSwitches = function() {
+    $scope.save = function() {
         // Show a loading overlay
         $ionicLoading.show({
             template: 'Saving...'
@@ -43,6 +48,9 @@ angular.module('light-switch-mobile.controllers')
         $localStorage.set($rootScope.localStorageKeys.lightSwitchServer.protocol, $scope.lightSwitchServer.protocol);
         $localStorage.set($rootScope.localStorageKeys.lightSwitchServer.address, $scope.lightSwitchServer.address);
         $localStorage.set($rootScope.localStorageKeys.lightSwitchServer.port, $scope.lightSwitchServer.port);
+        
+        // Update the Service Settings
+        $localStorage.set($rootScope.localStorageKeys.lightSwitchService.wifiName, $scope.lightSwitchService.wifiName);
         
         // Make sure the light switch list is NOT null
         if ($scope.lightSwitchList != null) {
@@ -73,6 +81,15 @@ angular.module('light-switch-mobile.controllers')
         });
     };
     
+    $scope.toggleTurnOnLightsWhenConnectingToWifi = function() {
+        if ($scope.lightSwitchService.turnOnLightsWhenConnectingToWifi == true) {
+            $scope.startService();
+        }
+        else {
+            $scope.stopService();
+        }
+    }
+    
     $scope.startService = function() {
         window.LightSwitchServicePlugin.startService(
             function(response) { // Success
@@ -86,7 +103,8 @@ angular.module('light-switch-mobile.controllers')
                     title: 'Service Response',
                     template: response.message
                 });
-            });
+            },
+            $scope.lightSwitchService.wifiName);
     };
     
     $scope.stopService = function() {

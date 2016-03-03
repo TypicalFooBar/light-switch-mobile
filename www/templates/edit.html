@@ -1,5 +1,5 @@
 <ion-view view-title="Edit">
-	<ion-content>
+    <ion-content>
         <h2>Light Switch Names</h2>
         <div class="list">
             <label class="item item-input item-stacked-label" ng-repeat="lightSwitch in lightSwitchList">
@@ -20,8 +20,20 @@
             <span class="input-label">Light Switch Server Port</span>
             <input class="edit-name-input" type="text" ng-model="lightSwitchServer.port">
         </label>
-        <button class="button button-full button-dark" ng-click="updateLightSwitches()">Save</button>
-        <button class="button button-full button-dark" ng-click="startService()">Start Service</button>
-        <button class="button button-full button-dark" ng-click="stopService()">Stop Service</button>
-	</ion-content>
+        <h2>Service Settings</h2>
+        <label class="item item-input item-stacked-label">
+            <span class="input-label">Wifi Name</span>
+            <input class="edit-name-input" type="text" ng-model="lightSwitchService.wifiName">
+        </label>
+        <label class="item item-toggle">
+            Turn On Lights When Connecting to Wifi (named above)
+            <label class="toggle">
+                <input type="checkbox" ng-model="lightSwitchService.turnOnLightsWhenConnectingToWifi" ng-change="toggleTurnOnLightsWhenConnectingToWifi()">
+                <div class="track">
+                    <div class="handle"></div>
+                </div>
+            </label>
+        </label>
+        <button class="button button-full button-dark" ng-click="save()">Save</button>
+    </ion-content>
 </ion-view>
