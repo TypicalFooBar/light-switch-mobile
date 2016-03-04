@@ -1,6 +1,6 @@
 angular.module('light-switch-mobile.controllers')
 
-.controller('HomeController', function($scope, $rootScope, $http, $ionicLoading) {
+.controller('HomeController', function($scope, $rootScope, $http, $ionicLoading, $ionicPlatform) {
     $scope.lightSwitchList = null;
     $scope.loadingDataFromLightSwitchServer = false;
     $scope.loadFromServerFailed = false;
@@ -59,6 +59,10 @@ angular.module('light-switch-mobile.controllers')
             var i = 0;
         });
     };
+    
+    $ionicPlatform.on('resume', function(){
+        $scope.init();
+    });
     
     $scope.init();
 });
