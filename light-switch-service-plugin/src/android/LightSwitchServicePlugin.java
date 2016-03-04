@@ -36,7 +36,7 @@ public class LightSwitchServicePlugin extends CordovaPlugin
             // Get arguments
             String wifiName = args.getString(0);
             String lightSwitchServerUrl = args.getString(1);
-            String lightSwitchIdList = args.getJSONArray(2).toString();
+            String lightSwitchIdList = args.getJSONArray(2).toString().replace("[", "").replace("]", "");
             
             // Start the service with these arguments
             this.startService(wifiName, lightSwitchServerUrl, lightSwitchIdList);
