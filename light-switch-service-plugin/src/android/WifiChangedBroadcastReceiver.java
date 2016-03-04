@@ -9,83 +9,100 @@ import android.net.wifi.WifiInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
+/**
+ * Waits for and responds to signals from the Android OS that the network connectivity has changed.
+ */
 public class WifiChangedBroadcastReceiver extends BroadcastReceiver
 {
+    /**
+     * The wifi router's name to check when connecting to a new router.
+     */
     private String wifiName;
+    
+    /**
+     * Sets the wifi name to check when connecting to a new router.
+     *
+     * @param wifiName The wifi name to check when connecting to a new router.
+     */
     public void setWifiName(String wifiName)
     {
         this.wifiName = wifiName;
     }
     
+    /**
+     * The Light Switch Server URL to connect to.
+     */
+    private String lightSwitchServerUrl;
+    
+    /**
+     * Sets the Light Switch Server URL to connect to.
+     *
+     * @param lightSwitchServerUrl The Light Switch Server URL to connect to.
+     */
+    public void setLightSwitchServerUrl(String lightSwitchServerUrl)
+    {
+        this.lightSwitchServerUrl = lightSwitchServerUrl;
+    }
+    
+    /**
+     * Called when connecting to or disconnecting from a router.
+     */
     @Override
     public void onReceive(Context context, Intent intent)
     {
         // Log info
         Log.d("WifiChangedBroadcastReceiver", "onReceive()");
-    
+        
+        // If we've connected to a wifi router with the name ther user has specified
         if (this.isConnectedToWifiWithName(this.wifiName, context))
         {
-            // Can't do networking on the main thread
-            Thread thread = new Thread()
-            {
-                public void run()
-                {
-                    URL url;
-                    HttpURLConnection connection = null;
-                    try
-                    {
-                        url = new URL("http://192.168.1.116:80/api/light-switch?action=getLightSwitchList");
-                        connection = (HttpURLConnection) url.openConnection();
-                        BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                        String inputLine;
-                        StringBuffer response = new StringBuffer();
-                        while ((inputLine = in.readLine()) != null) {
-                            response.append(inputLine);
-                        }
-                        
-                        Log.d("WifiChangedBroadcastReceiver", "Message Received: " + response.toString());
-                    }
-                    catch (Exception e)
-                    {
-                        Log.d("WifiChangedBroadcastReceiver", "Exception: " + e.toString());
-                    }
-                    finally
-                    {
-                        if (connection != null)
-                        {
-                            connection.disconnect();
-                        }
-                    }
-                }
-            };
-            thread.start();
+            // Create the URL to the Light Switch Server
+            String url = this.lightSwitchServerUrl + "/api/light-switch?action=getLightSwitchList";
+            
+            // Create the HttpRequest
+            HttpRequest httpRequest = new HttpRequest(url);
+            
+            // Get the response from the HttpRequest
+            String response = httpRequest.getResponse();
+            
+            // Log info
+            Log.d("WifiChangedBroadcastReceiver", "Message Received: " + response);
         }
     }
     
+    /**
+     * Checks if the wifi router that we've connected to has the same name as the one the user specified.
+     * This is also called when we disconnect from a router - this function will return false in that case.
+     *
+     * @param name The name to compare against when checking the routers name.
+     * @param context The application context.
+     */
     private boolean isConnectedToWifiWithName(String name, Context context)
     {
+        // For reasons I do not understand, This BroadcastReceiver is called EVEN WHEN it has been unregistered.
+        // When that happens, it is called with a null name - this just makes sure we don't run any code if the name is null.
+        // Ultimately, I'd like to figure out why this bug is happening, but for now this is the bandaid.
         if (name != null)
         {
             // Log info
             Log.d("WifiChangedBroadcastReceiver", "isConnectedToWifiWithName()");
             
+            // Get the wifi network info
             ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo networkInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);  
             
+            // If we are connected to wifi
             if (networkInfo.isConnected())
             {
                 // Log info
                 Log.d("WifiChangedBroadcastReceiver", "Connected to wifi");
                 
+                // Get the name of this router
                 WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
                 WifiInfo wifiInfo = wifiManager.getConnectionInfo();
                 String wifiName = wifiInfo.getSSID();
                 
+                // If the name is the same as the one the user specified
                 if (wifiName.equals(name))
                 {
                     // Log info
@@ -109,7 +126,7 @@ public class WifiChangedBroadcastReceiver extends BroadcastReceiver
                 return false;
             }
         }
-        else
+        else // If the name is null
         {
             return false;
         }
