@@ -4,33 +4,33 @@
         <div class="list">
             <label class="item item-input item-stacked-label" ng-repeat="lightSwitch in lightSwitchList">
                 <span class="input-label">Outlet {{$index + 1}}</span>
-                <input class="edit-name-input" type="text" ng-model="lightSwitch.name" ng-disabled="lightSwitchService.turnOnLightsWhenConnectingToWifi">
+                <input class="edit-name-input" type="text" ng-model="lightSwitch.name" ng-disabled="lightSwitchService.useWelcomeHomeLights">
             </label>
         </div>
         <h2>Server Settings</h2>
         <label class="item item-input item-stacked-label">
             <span class="input-label">Light Switch Server Protocol</span>
-            <input class="edit-name-input" type="text" ng-model="lightSwitchServer.protocol" ng-disabled="lightSwitchService.turnOnLightsWhenConnectingToWifi">
+            <input class="edit-name-input" type="text" ng-model="lightSwitchServer.protocol" ng-disabled="lightSwitchService.useWelcomeHomeLights">
         </label>
         <label class="item item-input item-stacked-label">
             <span class="input-label">Light Switch Server Address</span>
-            <input class="edit-name-input" type="text" ng-model="lightSwitchServer.address" ng-disabled="lightSwitchService.turnOnLightsWhenConnectingToWifi">
+            <input class="edit-name-input" type="text" ng-model="lightSwitchServer.address" ng-disabled="lightSwitchService.useWelcomeHomeLights">
         </label>
         <label class="item item-input item-stacked-label">
             <span class="input-label">Light Switch Server Port</span>
-            <input class="edit-name-input" type="text" ng-model="lightSwitchServer.port" ng-disabled="lightSwitchService.turnOnLightsWhenConnectingToWifi">
+            <input class="edit-name-input" type="text" ng-model="lightSwitchServer.port" ng-disabled="lightSwitchService.useWelcomeHomeLights">
         </label>
         <h2>Service Settings</h2>
         <label class="item item-input item-stacked-label">
             <span class="input-label">Wifi Name</span>
-            <input class="edit-name-input" type="text" ng-model="lightSwitchService.wifiName" ng-disabled="lightSwitchService.turnOnLightsWhenConnectingToWifi">
+            <input class="edit-name-input" type="text" ng-model="lightSwitchService.wifiName" ng-disabled="lightSwitchService.useWelcomeHomeLights">
         </label>
         <label class="item item-input item-stacked-label">
             <span class="input-label">Use Light Switch with Service</span>
             <label class="item item-toggle" ng-repeat="lightSwitch in lightSwitchList">
                 {{lightSwitch.name}}
                 <label class="toggle">
-                    <input type="checkbox" ng-model="lightSwitch.useWithService" ng-disabled="lightSwitchService.turnOnLightsWhenConnectingToWifi" ng-change="toggleLightSwitchIdList(lightSwitch.id)">
+                    <input type="checkbox" ng-model="lightSwitch.useWithService" ng-disabled="lightSwitchService.useWelcomeHomeLights" ng-change="toggleLightSwitchIdList(lightSwitch.id)">
                     <div class="track">
                         <div class="handle"></div>
                     </div>
@@ -38,9 +38,9 @@
             </label>
         </label>
         <label class="item item-toggle">
-            Turn on Lights When Connecting to Wifi (named above)
+            Welcome Home Lights
             <label class="toggle">
-                <input type="checkbox" ng-model="lightSwitchService.turnOnLightsWhenConnectingToWifi" ng-disabled="lightSwitchService.wifiName == ''" ng-change="toggleTurnOnLightsWhenConnectingToWifi()">
+                <input type="checkbox" ng-model="lightSwitchService.useWelcomeHomeLights" ng-disabled="lightSwitchService.wifiName == ''" ng-change="toggleWelcomeHomeLights()">
                 <div class="track">
                     <div class="handle"></div>
                 </div>

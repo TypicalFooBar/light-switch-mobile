@@ -12,7 +12,7 @@ angular.module('light-switch-mobile.controllers')
     
     $scope.lightSwitchService = {
         wifiName: $localStorage.get($rootScope.localStorageKeys.lightSwitchService.wifiName, ''),
-        turnOnLightsWhenConnectingToWifi: false,
+        useWelcomeHomeLights: false,
         lightSwitchIdList: $localStorage.get($rootScope.localStorageKeys.lightSwitchService.lightSwitchIdList, [])
     }
     
@@ -120,8 +120,8 @@ angular.module('light-switch-mobile.controllers')
         });
     };
     
-    $scope.toggleTurnOnLightsWhenConnectingToWifi = function() {
-        if ($scope.lightSwitchService.turnOnLightsWhenConnectingToWifi == true) {
+    $scope.toggleWelcomeHomeLights = function() {
+        if ($scope.lightSwitchService.useWelcomeHomeLights == true) {
             // Save before starting the service, but do not go back to the home page
             $scope.save(false, function() {
                 $scope.startService();
