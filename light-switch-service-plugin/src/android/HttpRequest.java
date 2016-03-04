@@ -39,6 +39,9 @@ public class HttpRequest implements Runnable
     @Override
     public void run()
     {
+        // Log the exception
+        Log.d("HttpRequest", "Making Request: " + this.url);
+        
         // Variables
         URL url;
         HttpURLConnection connection = null;

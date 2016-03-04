@@ -45,6 +45,22 @@ public class WifiChangedBroadcastReceiver extends BroadcastReceiver
     }
     
     /**
+     * The Light Switch IDs to turn on.
+     * The strings expected format is "[n,n,...,n] (without quotes).
+     */
+    private String lightSwitchIdList;
+    
+    /**
+     * Sets the Light Switch IDs to turn on.
+     *
+     * @param lightSwitchServerUrl The Light Switch IDs to turn on. The strings expected format is "[n,n,...,n] (without quotes).
+     */
+    public void setLightSwitchIdList(String lightSwitchIdList)
+    {
+        this.lightSwitchIdList = lightSwitchIdList;
+    }
+    
+    /**
      * Called when connecting to or disconnecting from a router.
      */
     @Override
@@ -57,7 +73,7 @@ public class WifiChangedBroadcastReceiver extends BroadcastReceiver
         if (this.isConnectedToWifiWithName(this.wifiName, context))
         {
             // Create the URL to the Light Switch Server
-            String url = this.lightSwitchServerUrl + "/api/light-switch?action=getLightSwitchList";
+            String url = this.lightSwitchServerUrl + "/api/light-switch?action=turnOn&idList=" + this.lightSwitchIdList;
             
             // Create the HttpRequest
             HttpRequest httpRequest = new HttpRequest(url);

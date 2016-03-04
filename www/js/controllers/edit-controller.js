@@ -105,7 +105,8 @@ angular.module('light-switch-mobile.controllers')
                 });
             },
             $scope.lightSwitchService.wifiName,
-            $rootScope.lightSwitchServer.url());
+            $rootScope.lightSwitchServer.url(),
+            [0,1]);
     };
     
     $scope.stopService = function() {

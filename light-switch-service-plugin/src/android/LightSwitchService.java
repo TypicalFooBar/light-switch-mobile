@@ -29,10 +29,12 @@ public class LightSwitchService extends Service
         // Get arguments
         String wifiName = intent.getExtras().getString("wifiName");
         String lightSwitchServerUrl = intent.getExtras().getString("lightSwitchServerUrl");
+        String lightSwitchIdList = intent.getExtras().getString("lightSwitchIdList");
         
         // Set values in the BroadcastReceiver
         this.wifiChangedBroadcastReceiver.setWifiName(wifiName);
         this.wifiChangedBroadcastReceiver.setLightSwitchServerUrl(lightSwitchServerUrl);
+        this.wifiChangedBroadcastReceiver.setLightSwitchIdList(lightSwitchIdList);
         
         // Create the intent for the BroadcastReceiver
         IntentFilter intentFilter = new IntentFilter();
