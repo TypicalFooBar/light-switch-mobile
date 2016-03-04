@@ -21,6 +21,16 @@ angular.module('light-switch-mobile.controllers')
         
         $scope.getLightSwitchList();
         
+        // Check if the service is running
+        window.LightSwitchServicePlugin.isServiceRunning(
+            function(response) { // Success
+                if (response.isServiceRunning == true) {
+                    $scope.lightSwitchService.useWelcomeHomeLights = true;
+                }
+            },
+            function(response) { // Error
+            });
+        
         // If it's a comma-delimited string
         if ($scope.lightSwitchService.lightSwitchIdList.indexOf(',') > -1) {
             // Turn it into an array of integers

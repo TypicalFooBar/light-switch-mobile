@@ -66,6 +66,18 @@ public class LightSwitchServicePlugin extends CordovaPlugin
             
             return true;
         }
+        else if (action.equals("is-service-running")) // If the action is to check if the service is running
+        {
+            // Create a JSON response to return to the view
+            JSONObject response = new JSONObject();
+            response.put("isServiceRunning", this.serviceIntent != null);
+            callbackContext.success(response);
+            
+            // Log info
+            Log.d("LightSwitchServicePlugin", "execute() end");
+            
+            return true;
+        }
         else // Else, the action was unrecognized
         {
             // Create a JSON response to return to the view

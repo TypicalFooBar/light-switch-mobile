@@ -14,6 +14,14 @@ var LightSwitchServicePlugin = {
             "LightSwitchServicePlugin", // Mapped to the native Java class that will be called
             "stop-service", // Send this action to the execute() function in the plugin
             []); // Arguments, if needed
+    },
+    isServiceRunning: function(successCallback, errorCallback) {
+        cordova.exec(
+            successCallback, // Success callback
+            errorCallback, // Error callback
+            "LightSwitchServicePlugin", // Mapped to the native Java class that will be called
+            "is-service-running", // Send this action to the execute() function in the plugin
+            []); // Arguments, if needed
     }
 }
 
