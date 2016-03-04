@@ -116,7 +116,7 @@ public class WifiChangedBroadcastReceiver extends BroadcastReceiver
                 // Get the name of this router
                 WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
                 WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-                String wifiName = wifiInfo.getSSID();
+                String wifiName = wifiInfo.getSSID().replaceAll("\"", "");
                 
                 // If the name is the same as the one the user specified
                 if (wifiName.equals(name))
