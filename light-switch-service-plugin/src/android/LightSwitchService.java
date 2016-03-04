@@ -47,6 +47,18 @@ public class LightSwitchService extends Service
     }
     
     /**
+     * Called when bound to a new broadcast.
+     */
+    @Override
+    public IBinder onBind(Intent intent)
+    {
+        // Log info
+        Log.d("LightSwitchService", "onBind()");
+        
+        return null;
+    }
+    
+    /**
      * Called once when the service is stopped.
      */
     @Override
