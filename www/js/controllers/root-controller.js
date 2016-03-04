@@ -10,7 +10,8 @@ angular.module('light-switch-mobile.controllers', [])
             port: 'lightSwitchServerPort'
         },
         lightSwitchService: {
-            wifiName: 'lightSwitchServiceWifiName'
+            wifiName: 'lightSwitchServiceWifiName',
+            lightSwitchIdList: 'lightSwitchIdList'
         }
     };
     

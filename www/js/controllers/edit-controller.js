@@ -12,13 +12,36 @@ angular.module('light-switch-mobile.controllers')
     
     $scope.lightSwitchService = {
         wifiName: $localStorage.get($rootScope.localStorageKeys.lightSwitchService.wifiName, ''),
-        turnOnLightsWhenConnectingToWifi: false
+        turnOnLightsWhenConnectingToWifi: false,
+        lightSwitchIdList: $localStorage.get($rootScope.localStorageKeys.lightSwitchService.lightSwitchIdList, [])
     }
     
     $scope.init = function() {
         $ionicNavBarDelegate.showBackButton(true);
         
         $scope.getLightSwitchList();
+        
+        // If it's a comma-delimited string
+        if ($scope.lightSwitchService.lightSwitchIdList.indexOf(',') > -1) {
+            // Turn it into an array of integers
+            $scope.lightSwitchService.lightSwitchIdList = $scope.lightSwitchService.lightSwitchIdList.split(',').map(Number);
+        }
+        
+    };
+    
+    $scope.toggleLightSwitchIdList = function(id) {
+        // Find the index of the ID
+        var index = $scope.lightSwitchService.lightSwitchIdList.indexOf(id)
+        
+        // If the ID is not in the list
+        if (index == -1) {
+            // Add the ID to the list
+            $scope.lightSwitchService.lightSwitchIdList.push(id);
+        }
+        else { // Else, if the ID is in the list
+            // Remove the ID from the list
+            $scope.lightSwitchService.lightSwitchIdList.splice(index, 1);
+        }
     };
     
     $scope.getLightSwitchList = function() {
@@ -26,16 +49,27 @@ angular.module('light-switch-mobile.controllers')
         .then(function success(response) {
             $scope.lightSwitchList = response.data;
             
-            // Set the original names
             angular.forEach($scope.lightSwitchList, function(lightSwitch, key) {
+                // Save a copy of the original names
                 $scope.lightSwitchOriginalNames.push(lightSwitch.name);
+                
+                // Add a variable to the light switch object to track if it is used with the service.
+                // If the light switch's ID is already in the list of light switches to use.
+                if ($scope.lightSwitchService.lightSwitchIdList.indexOf(lightSwitch.id) > -1) {
+                    // Set it to true
+                    lightSwitch.useWithService = true;
+                }
+                else {
+                    // Else, set it to false
+                    lightSwitch.useWithService = false;
+                }
             });
         }, function error(response) {
             
         });
     };
     
-    $scope.save = function() {
+    $scope.save = function(goBackAfterSave, finishedSavingCallback) {
         // Show a loading overlay
         $ionicLoading.show({
             template: 'Saving...'
@@ -51,6 +85,7 @@ angular.module('light-switch-mobile.controllers')
         
         // Update the Service Settings
         $localStorage.set($rootScope.localStorageKeys.lightSwitchService.wifiName, $scope.lightSwitchService.wifiName);
+        $localStorage.set($rootScope.localStorageKeys.lightSwitchService.lightSwitchIdList, $scope.lightSwitchService.lightSwitchIdList);
         
         // Make sure the light switch list is NOT null
         if ($scope.lightSwitchList != null) {
@@ -76,14 +111,21 @@ angular.module('light-switch-mobile.controllers')
         
         // Once all http calls have completed
         $q.all(httpCalls).then(function() {
-            $ionicHistory.goBack();
+            if (goBackAfterSave) {
+                $ionicHistory.goBack();
+            }
             $ionicLoading.hide();
+            
+            finishedSavingCallback();
         });
     };
     
     $scope.toggleTurnOnLightsWhenConnectingToWifi = function() {
         if ($scope.lightSwitchService.turnOnLightsWhenConnectingToWifi == true) {
-            $scope.startService();
+            // Save before starting the service, but do not go back to the home page
+            $scope.save(false, function() {
+                $scope.startService();
+            });
         }
         else {
             $scope.stopService();
@@ -106,7 +148,7 @@ angular.module('light-switch-mobile.controllers')
             },
             $scope.lightSwitchService.wifiName,
             $rootScope.lightSwitchServer.url(),
-            [0,1]);
+            $scope.lightSwitchService.lightSwitchIdList);
     };
     
     $scope.stopService = function() {
