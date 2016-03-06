@@ -9,17 +9,14 @@ import org.json.JSONException;
 
 import android.util.Log;
 import android.content.Intent;
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningServiceInfo;
 
 /**
  * This plugin can start and stop the LightSwitchService.
  */
 public class LightSwitchServicePlugin extends CordovaPlugin
 {
-    /**
-     * The service Intent - used to start/stop the service.
-     */
-    private Intent serviceIntent = null;
-    
     /**
      * Called with an action, arguments array, and a callback context
      * from JavaScript code. This is the single entry point.
@@ -70,7 +67,7 @@ public class LightSwitchServicePlugin extends CordovaPlugin
         {
             // Create a JSON response to return to the view
             JSONObject response = new JSONObject();
-            response.put("isServiceRunning", this.serviceIntent != null);
+            response.put("isServiceRunning", isServiceRunning(LightSwitchService.class));
             callbackContext.success(response);
             
             // Log info
@@ -105,7 +102,7 @@ public class LightSwitchServicePlugin extends CordovaPlugin
         Log.d("LightSwitchServicePlugin", "startService() start");
         
         // Start the service
-        this.serviceIntent = new Intent(this.cordova.getActivity().getBaseContext(), LightSwitchService.class);
+        Intent serviceIntent = new Intent(this.cordova.getActivity().getBaseContext(), LightSwitchService.class);
         serviceIntent.putExtra("wifiName", wifiName);
         serviceIntent.putExtra("lightSwitchServerUrl", lightSwitchServerUrl);
         serviceIntent.putExtra("lightSwitchIdList", lightSwitchIdList);
@@ -124,10 +121,32 @@ public class LightSwitchServicePlugin extends CordovaPlugin
         Log.d("LightSwitchServicePlugin", "stopService() start");
         
         // Stop the service
-        this.cordova.getActivity().stopService(this.serviceIntent);
-        this.serviceIntent = null;
+        this.cordova.getActivity().stopService(new Intent(this.cordova.getActivity().getBaseContext(), LightSwitchService.class));
         
         // Log info
         Log.d("LightSwitchServicePlugin", "stopService() end");
+    }
+    
+    /**
+     * Checks if service is running.
+     *
+     * @param serviceClass The service's class to check for.
+     *
+     * @return True if the service is running, false otherwise.
+     */
+    private boolean isServiceRunning(Class<?> serviceClass)
+    {
+        ActivityManager manager = (ActivityManager) this.cordova.getActivity().getBaseContext().getSystemService(this.cordova.getActivity().getBaseContext().ACTIVITY_SERVICE);
+        for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
+        {
+            if (serviceClass.getName().equals(service.service.getClassName()))
+            {
+                // Service is running
+                return true;
+            }
+        }
+        
+        // Service is not running
+        return false;
     }
 }
