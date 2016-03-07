@@ -38,9 +38,22 @@ public class LightSwitchServicePlugin extends CordovaPlugin
             String wifiName = args.getString(0);
             String lightSwitchServerUrl = args.getString(1);
             String lightSwitchIdList = args.getJSONArray(2).toString().replace("[", "").replace("]", "");
+            String startHour = args.getString(3);
+            String startMinute = args.getString(4);
+            String endHour = args.getString(5);
+            String endMinute = args.getString(6);
+            String minWifiDisconnectMinutes = args.getString(7);
             
             // Start the service with these arguments
-            this.startService(wifiName, lightSwitchServerUrl, lightSwitchIdList);
+            this.startService(
+                wifiName,
+                lightSwitchServerUrl,
+                lightSwitchIdList,
+                startHour,
+                startMinute,
+                endHour,
+                endMinute,
+                minWifiDisconnectMinutes);
             
             // Create a JSON response to return to the view
             JSONObject response = new JSONObject();
@@ -109,7 +122,15 @@ public class LightSwitchServicePlugin extends CordovaPlugin
      * @param lightSwitchServerUrl The Light Switch Server URL to connect to.
      * @param lightSwitchIdList The Light Switch IDs to turn on.
      */
-    private void startService(String wifiName, String lightSwitchServerUrl, String lightSwitchIdList)
+    private void startService(
+        String wifiName,
+        String lightSwitchServerUrl,
+        String lightSwitchIdList,
+        String startHour,
+        String startMinute,
+        String endHour,
+        String endMinute,
+        String minWifiDisconnectMinutes)
     {
         // Log info
         Log.d("LightSwitchServicePlugin", "LightSwitchServicePlugin: startService() [START]");
@@ -119,6 +140,11 @@ public class LightSwitchServicePlugin extends CordovaPlugin
         serviceIntent.putExtra("wifiName", wifiName);
         serviceIntent.putExtra("lightSwitchServerUrl", lightSwitchServerUrl);
         serviceIntent.putExtra("lightSwitchIdList", lightSwitchIdList);
+        serviceIntent.putExtra("startHour", startHour);
+        serviceIntent.putExtra("startMinute", startMinute);
+        serviceIntent.putExtra("endHour", endHour);
+        serviceIntent.putExtra("endMinute", endMinute);
+        serviceIntent.putExtra("minWifiDisconnectMinutes", minWifiDisconnectMinutes);
         this.cordova.getActivity().startService(serviceIntent);
         
         // Log info

@@ -175,7 +175,12 @@ angular.module('light-switch-mobile.controllers')
             },
             $scope.lightSwitchService.wifiName,
             $rootScope.lightSwitchServer.url(),
-            $scope.lightSwitchService.welcomeHomeLights.lightSwitchIdList);
+            $scope.lightSwitchService.welcomeHomeLights.lightSwitchIdList,
+            $scope.lightSwitchService.welcomeHomeLights.timeOfDay.start.getHours(),
+            $scope.lightSwitchService.welcomeHomeLights.timeOfDay.start.getMinutes(),
+            $scope.lightSwitchService.welcomeHomeLights.timeOfDay.end.getHours(),
+            $scope.lightSwitchService.welcomeHomeLights.timeOfDay.end.getMinutes(),
+            $scope.lightSwitchService.welcomeHomeLights.minWifiDisconnectMinutes);
     };
     
     $scope.stopService = function() {

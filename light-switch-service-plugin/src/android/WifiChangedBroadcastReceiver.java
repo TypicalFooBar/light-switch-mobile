@@ -9,6 +9,8 @@ import android.net.wifi.WifiInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import java.util.Calendar;
+
 /**
  * Waits for and responds to signals from the Android OS that the network connectivity has changed.
  */
@@ -61,6 +63,91 @@ public class WifiChangedBroadcastReceiver extends BroadcastReceiver
     }
     
     /**
+     * The hour to start using the Welcome Home Lights.
+     */
+    private String startHour;
+    
+    /**
+     * Sets the hour to start using the Welcome Home Lights.
+     *
+     * @param startHour The hour to start using the Welcome Home Lights.
+     */
+    public void setStartHour(String startHour)
+    {
+        this.startHour = startHour;
+    }
+    
+    /**
+     * The minute (within the startHour) to start using the Welcome Home Lights.
+     */
+    private String startMinute;
+    
+    /**
+     * Sets the minute (within the startHour) to start using the Welcome Home Lights.
+     *
+     * @param startMinute The minute (within the startHour) to start using the Welcome Home Lights.
+     */
+    public void setStartMinute(String startMinute)
+    {
+        this.startMinute = startMinute;
+    }
+    
+    /**
+     * The hour to stop using the Welcome Home Lights.
+     */
+    private String endHour;
+    
+    /**
+     * Sets the hour to stop using the Welcome Home Lights.
+     *
+     * @param endHour The hour to stop using the Welcome Home Lights.
+     */
+    public void setEndHour(String endHour)
+    {
+        this.endHour = endHour;
+    }
+    
+    /**
+     * The minute (within the endHour) to stop using the Welcome Home Lights.
+     */
+    private String endMinute;
+    
+    /**
+     * Sets the minute (within the endHour) to stop using the Welcome Home Lights.
+     *
+     * @param endMinute The minute (within the endHour) to stop using the Welcome Home Lights.
+     */
+    public void setEndMinute(String endMinute)
+    {
+        this.endMinute = endMinute;
+    }
+    
+    /**
+     * The number of minutes that are required to be disconnected from wifi before using the Welcome Home Lights.
+     */
+    private String minWifiDisconnectMinutes;
+    
+    /**
+     * Sets the number of minutes that are required to be disconnected from wifi before using the Welcome Home Lights.
+     *
+     * @param minWifiDisconnectMinutes The number of minutes that are required to be disconnected from wifi before using the Welcome Home Lights.
+     */
+    public void setMinWifiDisconnectMinutes(String minWifiDisconnectMinutes)
+    {
+        this.minWifiDisconnectMinutes = minWifiDisconnectMinutes;
+    }
+    
+    /**
+     * True if the device is currently connected to the specified wifi, false otherwise.
+     */
+    private boolean connectedToSpecifiedWifi = false;
+    
+    /**
+     * The time that the device disconnected from the specified wifi.
+     */ 
+    private Calendar wifiDisconnectedTime = Calendar.getInstance();
+    
+    /**
      * Called when connecting to or disconnecting from a router.
      */
     @Override
@@ -75,14 +162,59 @@ public class WifiChangedBroadcastReceiver extends BroadcastReceiver
             // Log info
             Log.d("LightSwitchServicePlugin", "WifiChangedBroadcastReceiver: Connected to correct wifi");
             
-            // Create the URL to the Light Switch Server
-            String url = this.lightSwitchServerUrl + "/api/light-switch?action=turnOn&idList=" + this.lightSwitchIdList;
+            // Save the fact that we are connected to the right wifi
+            this.connectedToSpecifiedWifi = true;
             
-            // Create the HttpRequest
-            HttpRequest httpRequest = new HttpRequest(url);
+            // Get the current time
+            Calendar now = Calendar.getInstance();
             
-            // Get the response from the HttpRequest
-            String response = httpRequest.getResponse();
+            // Set the other calendar's to compare against
+            Calendar start = Calendar.getInstance();
+            start.set(Calendar.HOUR_OF_DAY, Integer.parseInt(this.startHour));
+            start.set(Calendar.MINUTE, Integer.parseInt(this.startMinute));
+            Calendar end = Calendar.getInstance();
+            end.add(Calendar.DAY_OF_MONTH, 1); // Make the end time the next day
+            end.set(Calendar.HOUR_OF_DAY, Integer.parseInt(this.endHour));
+            end.set(Calendar.MINUTE, Integer.parseInt(this.endMinute));
+            
+            // If now is greater than the start && less than end
+            if (now.compareTo(start) > 0 && now.compareTo(end) < 0)
+            {
+                // wifiDisconnectedTime + minWifiDisconnectMinutes
+                Calendar disconnectTimeCheck = (Calendar)this.wifiDisconnectedTime.clone();
+                disconnectTimeCheck.add(Calendar.MINUTE, Integer.parseInt(this.minWifiDisconnectMinutes));
+                
+                // If now is greater than (wifiDisconnectedTime + minWifiDisconnectMinutes)
+                if (now.compareTo(disconnectTimeCheck) > 0)
+                {
+                    // Create the URL to the Light Switch Server
+                    String url = this.lightSwitchServerUrl + "/api/light-switch?action=turnOn&idList=" + this.lightSwitchIdList;
+                    
+                    // Create the HttpRequest
+                    HttpRequest httpRequest = new HttpRequest(url);
+                    
+                    // Get the response from the HttpRequest
+                    String response = httpRequest.getResponse();
+                }
+            }
+        }
+        else
+        {
+            // Log info
+            Log.d("LightSwitchServicePlugin", "WifiChangedBroadcastReceiver: Disconnected from the correct wifi");
+            
+            // If we were connected to the correct wifi, but are no longer connected
+            if (this.connectedToSpecifiedWifi)
+            {
+                // Log info
+                Log.d("LightSwitchServicePlugin", "WifiChangedBroadcastReceiver: Device was previously connected to the correct wifi");
+            
+                // Save the fact that we are disconnected from the right wifi
+                this.connectedToSpecifiedWifi = false;
+                
+                // Set the disconnected time as now
+                wifiDisconnectedTime = Calendar.getInstance();
+            }
         }
         
         // Log info

@@ -30,11 +30,21 @@ public class LightSwitchService extends Service
         String wifiName = intent.getExtras().getString("wifiName");
         String lightSwitchServerUrl = intent.getExtras().getString("lightSwitchServerUrl");
         String lightSwitchIdList = intent.getExtras().getString("lightSwitchIdList");
+        String startHour = intent.getExtras().getString("startHour");
+        String startMinute = intent.getExtras().getString("startMinute");
+        String endHour = intent.getExtras().getString("endHour");
+        String endMinute = intent.getExtras().getString("endMinute");
+        String minWifiDisconnectMinutes = intent.getExtras().getString("minWifiDisconnectMinutes");
         
         // Set values in the BroadcastReceiver
         this.wifiChangedBroadcastReceiver.setWifiName(wifiName);
         this.wifiChangedBroadcastReceiver.setLightSwitchServerUrl(lightSwitchServerUrl);
         this.wifiChangedBroadcastReceiver.setLightSwitchIdList(lightSwitchIdList);
+        this.wifiChangedBroadcastReceiver.setStartHour(startHour);
+        this.wifiChangedBroadcastReceiver.setStartMinute(startMinute);
+        this.wifiChangedBroadcastReceiver.setEndHour(endHour);
+        this.wifiChangedBroadcastReceiver.setEndMinute(endMinute);
+        this.wifiChangedBroadcastReceiver.setMinWifiDisconnectMinutes(minWifiDisconnectMinutes);
         
         // Create the intent for the BroadcastReceiver
         IntentFilter intentFilter = new IntentFilter();
