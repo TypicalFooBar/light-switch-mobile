@@ -173,12 +173,13 @@ public class WifiChangedBroadcastReceiver extends BroadcastReceiver
             start.set(Calendar.HOUR_OF_DAY, Integer.parseInt(this.startHour));
             start.set(Calendar.MINUTE, Integer.parseInt(this.startMinute));
             Calendar end = Calendar.getInstance();
-            end.add(Calendar.DAY_OF_MONTH, 1); // Make the end time the next day
             end.set(Calendar.HOUR_OF_DAY, Integer.parseInt(this.endHour));
             end.set(Calendar.MINUTE, Integer.parseInt(this.endMinute));
             
-            // If now is greater than the start && less than end
-            if (now.compareTo(start) > 0 && now.compareTo(end) < 0)
+            // If now is greater than the start || less than end
+            // Use an OR here, because once midnight hits, the check would not work if it were AND.
+            // This means that if it's greater than the start on today || less than the end on today, but not inbetween these two times.
+            if (now.compareTo(start) > 0 || now.compareTo(end) < 0)
             {
                 // wifiDisconnectedTime + minWifiDisconnectMinutes
                 Calendar disconnectTimeCheck = (Calendar)this.wifiDisconnectedTime.clone();
