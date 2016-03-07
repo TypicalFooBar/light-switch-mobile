@@ -14,7 +14,11 @@ angular.module('light-switch-mobile.controllers')
         running: false,
         wifiName: $localStorage.get($rootScope.localStorageKeys.lightSwitchService.wifiName, ''),
         welcomeHomeLights: {
-            lightSwitchIdList: $localStorage.get($rootScope.localStorageKeys.lightSwitchService.welcomeHomeLights.lightSwitchIdList, [])
+            lightSwitchIdList: $localStorage.get($rootScope.localStorageKeys.lightSwitchService.welcomeHomeLights.lightSwitchIdList, []),
+            timeOfDay: {
+                start: new Date($localStorage.get($rootScope.localStorageKeys.lightSwitchService.welcomeHomeLights.timeOfDay.start, '93600000')),
+                end: new Date($localStorage.get($rootScope.localStorageKeys.lightSwitchService.welcomeHomeLights.timeOfDay.end, '50400000'))
+            }
         }
     }
     
@@ -103,6 +107,8 @@ angular.module('light-switch-mobile.controllers')
         // Update the Service Settings
         $localStorage.set($rootScope.localStorageKeys.lightSwitchService.wifiName, $scope.lightSwitchService.wifiName);
         $localStorage.set($rootScope.localStorageKeys.lightSwitchService.welcomeHomeLights.lightSwitchIdList, $scope.lightSwitchService.welcomeHomeLights.lightSwitchIdList);
+        $localStorage.set($rootScope.localStorageKeys.lightSwitchService.welcomeHomeLights.timeOfDay.start, $scope.lightSwitchService.welcomeHomeLights.timeOfDay.start);
+        $localStorage.set($rootScope.localStorageKeys.lightSwitchService.welcomeHomeLights.timeOfDay.end, $scope.lightSwitchService.welcomeHomeLights.timeOfDay.end);
         
         // Make sure the light switch list is NOT null
         if ($scope.lightSwitchList != null) {

@@ -12,7 +12,11 @@ angular.module('light-switch-mobile.controllers', [])
         lightSwitchService: {
             wifiName: 'lightSwitchService-WifiName',
             welcomeHomeLights: {
-                lightSwitchIdList: 'lightSwitchService-welcomeHomeLights-lightSwitchIdList'
+                lightSwitchIdList: 'lightSwitchService-welcomeHomeLights-lightSwitchIdList',
+                timeOfDay: {
+                    start: 'lightSwitchService-welcomeHomeLights-timeOfDay-start',
+                    end: 'lightSwitchService-welcomeHomeLights-timeOfDay-end'
+                }
             }
         }
     };
