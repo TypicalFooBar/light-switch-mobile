@@ -2,10 +2,6 @@ ion-header-bar {
     background-color: #353535 !important;
 }
 
-ion-content {
-    background-color: #1B1B1E;
-}
-
 .button-img {
     display: block;
     margin-left: auto;
@@ -25,28 +21,14 @@ ion-content {
 .button-text {
     text-align: center;
     width: 100%;
-    color: #FFFFFF;
 }
 
-.input-label {
-    color: #FFFFFF;
-}
-
-textarea, input[type="text"] {
+ion-content, h2, .item, .button-text, .input-label, textarea, input[type="text"], input[type="time"] {
     color: #FFFFFF;
     background-color: #1B1B1E;
 }
 
-h2 {
-    color: #FFFFFF;
-}
 
-.item {
-    background-color: #1B1B1E;
-    color: #FFFFFF;
-    border-color: rgb(68, 68, 68);
-}
-
-.item-stacked-label {
+.item, .item-stacked-label {
     border-color: rgb(68, 68, 68);
 }
