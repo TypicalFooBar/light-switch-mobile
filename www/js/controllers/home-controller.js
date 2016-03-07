@@ -27,6 +27,9 @@ angular.module('light-switch-mobile.controllers')
             
             // We're no longer loading data from the server
             $scope.loadingDataFromLightSwitchServer = false;
+            
+            // Load was successful
+            $scope.loadFromServerFailed = false;
         }, function error(response) {
             // We're no longer loading data from the server
             $scope.loadingDataFromLightSwitchServer = false;
@@ -34,6 +37,7 @@ angular.module('light-switch-mobile.controllers')
             // Stop showing the loading overlay
             $ionicLoading.hide();
             
+            // Load failed
             $scope.loadFromServerFailed = true;
         });
     };
