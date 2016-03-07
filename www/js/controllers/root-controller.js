@@ -16,7 +16,8 @@ angular.module('light-switch-mobile.controllers', [])
                 timeOfDay: {
                     start: 'lightSwitchService-welcomeHomeLights-timeOfDay-start',
                     end: 'lightSwitchService-welcomeHomeLights-timeOfDay-end'
-                }
+                },
+                minWifiDisconnectMinutes: 'lightSwitchService-welcomeHomeLights-minWifiDisconnectMinutes'
             }
         }
     };

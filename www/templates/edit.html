@@ -39,11 +39,15 @@
         </label>
         <label class="item item-input item-stacked-label">
             <span class="input-label">Start Time</span>
-            <input class="edit-name-input" ng-model="lightSwitchService.welcomeHomeLights.timeOfDay.start" type="time">
+            <input class="edit-name-input" type="time" ng-model="lightSwitchService.welcomeHomeLights.timeOfDay.start" ng-disabled="lightSwitchService.running">
         </label>
         <label class="item item-input item-stacked-label">
             <span class="input-label">End Time</span>
-            <input class="edit-name-input" ng-model="lightSwitchService.welcomeHomeLights.timeOfDay.end" type="time">
+            <input class="edit-name-input" type="time" ng-model="lightSwitchService.welcomeHomeLights.timeOfDay.end" ng-disabled="lightSwitchService.running">
+        </label>
+        <label class="item item-input item-stacked-label">
+            <span class="input-label">Minutes Disconnected From Wifi Before Using Lights</span>
+            <input class="edit-name-input" type="text" ng-model="lightSwitchService.welcomeHomeLights.minWifiDisconnectMinutes" ng-disabled="lightSwitchService.running">
         </label>
         <label class="item item-toggle">
             Use Welcome Home Lights
