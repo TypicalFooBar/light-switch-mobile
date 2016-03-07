@@ -11,9 +11,11 @@ angular.module('light-switch-mobile.controllers')
     };
     
     $scope.lightSwitchService = {
+        running: false,
         wifiName: $localStorage.get($rootScope.localStorageKeys.lightSwitchService.wifiName, ''),
-        useWelcomeHomeLights: false,
-        lightSwitchIdList: $localStorage.get($rootScope.localStorageKeys.lightSwitchService.lightSwitchIdList, [])
+        welcomeHomeLights: {
+            lightSwitchIdList: $localStorage.get($rootScope.localStorageKeys.lightSwitchService.welcomeHomeLights.lightSwitchIdList, [])
+        }
     }
     
     $scope.init = function() {
@@ -25,32 +27,37 @@ angular.module('light-switch-mobile.controllers')
         window.LightSwitchServicePlugin.isServiceRunning(
             function(response) { // Success
                 if (response.isServiceRunning == true) {
-                    $scope.lightSwitchService.useWelcomeHomeLights = true;
+                    $scope.lightSwitchService.running = true;
                 }
             },
             function(response) { // Error
             });
-        
+
         // If it's a comma-delimited string
-        if ($scope.lightSwitchService.lightSwitchIdList.indexOf(',') > -1) {
+        if ($scope.lightSwitchService.welcomeHomeLights.lightSwitchIdList.indexOf(',') > -1) {
             // Turn it into an array of integers
-            $scope.lightSwitchService.lightSwitchIdList = $scope.lightSwitchService.lightSwitchIdList.split(',').map(Number);
+            $scope.lightSwitchService.welcomeHomeLights.lightSwitchIdList = $scope.lightSwitchService.welcomeHomeLights.lightSwitchIdList.split(',').map(Number);
         }
-        
+        // Else, if it is just one number with no comma (but not yet an array)
+        else if ($scope.lightSwitchService.welcomeHomeLights.lightSwitchIdList.length > 0) {
+            var value = parseInt($scope.lightSwitchService.welcomeHomeLights.lightSwitchIdList);
+            $scope.lightSwitchService.welcomeHomeLights.lightSwitchIdList = [];
+            $scope.lightSwitchService.welcomeHomeLights.lightSwitchIdList.push(value);
+        }
     };
     
     $scope.toggleLightSwitchIdList = function(id) {
         // Find the index of the ID
-        var index = $scope.lightSwitchService.lightSwitchIdList.indexOf(id)
+        var index = $scope.lightSwitchService.welcomeHomeLights.lightSwitchIdList.indexOf(id)
         
         // If the ID is not in the list
         if (index == -1) {
             // Add the ID to the list
-            $scope.lightSwitchService.lightSwitchIdList.push(id);
+            $scope.lightSwitchService.welcomeHomeLights.lightSwitchIdList.push(id);
         }
         else { // Else, if the ID is in the list
             // Remove the ID from the list
-            $scope.lightSwitchService.lightSwitchIdList.splice(index, 1);
+            $scope.lightSwitchService.welcomeHomeLights.lightSwitchIdList.splice(index, 1);
         }
     };
     
@@ -65,7 +72,7 @@ angular.module('light-switch-mobile.controllers')
                 
                 // Add a variable to the light switch object to track if it is used with the service.
                 // If the light switch's ID is already in the list of light switches to use.
-                if ($scope.lightSwitchService.lightSwitchIdList.indexOf(lightSwitch.id) > -1) {
+                if ($scope.lightSwitchService.welcomeHomeLights.lightSwitchIdList.indexOf(lightSwitch.id) > -1) {
                     // Set it to true
                     lightSwitch.useWithService = true;
                 }
@@ -95,7 +102,7 @@ angular.module('light-switch-mobile.controllers')
         
         // Update the Service Settings
         $localStorage.set($rootScope.localStorageKeys.lightSwitchService.wifiName, $scope.lightSwitchService.wifiName);
-        $localStorage.set($rootScope.localStorageKeys.lightSwitchService.lightSwitchIdList, $scope.lightSwitchService.lightSwitchIdList);
+        $localStorage.set($rootScope.localStorageKeys.lightSwitchService.welcomeHomeLights.lightSwitchIdList, $scope.lightSwitchService.welcomeHomeLights.lightSwitchIdList);
         
         // Make sure the light switch list is NOT null
         if ($scope.lightSwitchList != null) {
@@ -126,12 +133,14 @@ angular.module('light-switch-mobile.controllers')
             }
             $ionicLoading.hide();
             
-            finishedSavingCallback();
+            if (finishedSavingCallback != null) {
+                finishedSavingCallback();
+            }
         });
     };
     
     $scope.toggleWelcomeHomeLights = function() {
-        if ($scope.lightSwitchService.useWelcomeHomeLights == true) {
+        if ($scope.lightSwitchService.running == true) {
             // Save before starting the service, but do not go back to the home page
             $scope.save(false, function() {
                 $scope.startService();
@@ -158,7 +167,7 @@ angular.module('light-switch-mobile.controllers')
             },
             $scope.lightSwitchService.wifiName,
             $rootScope.lightSwitchServer.url(),
-            $scope.lightSwitchService.lightSwitchIdList);
+            $scope.lightSwitchService.welcomeHomeLights.lightSwitchIdList);
     };
     
     $scope.stopService = function() {

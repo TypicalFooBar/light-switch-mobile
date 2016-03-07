@@ -24,7 +24,7 @@ public class LightSwitchService extends Service
     public int onStartCommand(Intent intent, int flags, int startId)
     {
         // Log info
-        Log.d("LightSwitchService", "onStartCommand()");
+        Log.d("LightSwitchServicePlugin", "LightSwitchService: onStartCommand() [START]");
         
         // Get arguments
         String wifiName = intent.getExtras().getString("wifiName");
@@ -43,6 +43,9 @@ public class LightSwitchService extends Service
         // Register the BroadcastReceiver
         this.registerReceiver(this.wifiChangedBroadcastReceiver, intentFilter);
         
+        // Log info
+        Log.d("LightSwitchServicePlugin", "LightSwitchService: onStartCommand() [END]");
+        
         // This will make sure the service is restarted if it is shut down by the OS
         // and it will be passed the same intent that started the service the first time.
         return Service.START_REDELIVER_INTENT;
@@ -55,7 +58,10 @@ public class LightSwitchService extends Service
     public IBinder onBind(Intent intent)
     {
         // Log info
-        Log.d("LightSwitchService", "onBind()");
+        Log.d("LightSwitchServicePlugin", "LightSwitchService: onBind() [START]");
+        
+        // Log info
+        Log.d("LightSwitchServicePlugin", "LightSwitchService: onBind() [END]");
         
         return null;
     }
@@ -67,10 +73,13 @@ public class LightSwitchService extends Service
     public void onDestroy()
     {
         // Log info
-        Log.d("LightSwitchService", "onDestroy()");
+        Log.d("LightSwitchServicePlugin", "LightSwitchService: onDestroy() [START]");
         
         // Unregister the BroadcastReceiver
         this.unregisterReceiver(this.wifiChangedBroadcastReceiver);
+        
+        // Log info
+        Log.d("LightSwitchServicePlugin", "LightSwitchService: onDestroy() [END]");
         
         super.onDestroy();
     }

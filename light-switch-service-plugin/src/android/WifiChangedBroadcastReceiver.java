@@ -67,11 +67,14 @@ public class WifiChangedBroadcastReceiver extends BroadcastReceiver
     public void onReceive(Context context, Intent intent)
     {
         // Log info
-        Log.d("WifiChangedBroadcastReceiver", "onReceive()");
+        Log.d("LightSwitchServicePlugin", "WifiChangedBroadcastReceiver: onReceive() [START]");
         
         // If we've connected to a wifi router with the name ther user has specified
         if (this.isConnectedToWifiWithName(this.wifiName, context))
         {
+            // Log info
+            Log.d("LightSwitchServicePlugin", "WifiChangedBroadcastReceiver: Connected to correct wifi");
+            
             // Create the URL to the Light Switch Server
             String url = this.lightSwitchServerUrl + "/api/light-switch?action=turnOn&idList=" + this.lightSwitchIdList;
             
@@ -80,10 +83,10 @@ public class WifiChangedBroadcastReceiver extends BroadcastReceiver
             
             // Get the response from the HttpRequest
             String response = httpRequest.getResponse();
-            
-            // Log info
-            Log.d("WifiChangedBroadcastReceiver", "Message Received: " + response);
         }
+        
+        // Log info
+        Log.d("LightSwitchServicePlugin", "WifiChangedBroadcastReceiver: onReceive() [END]");
     }
     
     /**
@@ -95,14 +98,14 @@ public class WifiChangedBroadcastReceiver extends BroadcastReceiver
      */
     private boolean isConnectedToWifiWithName(String name, Context context)
     {
+        // Log info
+        Log.d("LightSwitchServicePlugin", "WifiChangedBroadcastReceiver: isConnectedToWifiWithName() [START]");
+        
         // For reasons I do not understand, This BroadcastReceiver is called EVEN WHEN it has been unregistered.
         // When that happens, it is called with a null name - this just makes sure we don't run any code if the name is null.
         // Ultimately, I'd like to figure out why this bug is happening, but for now this is the bandaid.
         if (name != null)
         {
-            // Log info
-            Log.d("WifiChangedBroadcastReceiver", "isConnectedToWifiWithName()");
-            
             // Get the wifi network info
             ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo networkInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);  
@@ -111,7 +114,7 @@ public class WifiChangedBroadcastReceiver extends BroadcastReceiver
             if (networkInfo.isConnected())
             {
                 // Log info
-                Log.d("WifiChangedBroadcastReceiver", "Connected to wifi");
+                Log.d("LightSwitchServicePlugin", "WifiChangedBroadcastReceiver: isConnectedToWifiWithName() : Connected to wifi");
                 
                 // Get the name of this router
                 WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
@@ -122,14 +125,14 @@ public class WifiChangedBroadcastReceiver extends BroadcastReceiver
                 if (wifiName.equals(name))
                 {
                     // Log info
-                    Log.d("WifiChangedBroadcastReceiver", "WifiName (" + wifiName + ") matches Name (" + name + ")");
+                    Log.d("WifiChangedBroadcastReceiver", "WifiChangedBroadcastReceiver: isConnectedToWifiWithName() : Wifi names match");
                     
                     return true;
                 }
                 else
                 {
                     // Log info
-                    Log.d("WifiChangedBroadcastReceiver", "WifiName (" + wifiName + ") DOES NOT MATCH Name (" + name + ")");
+                    Log.d("WifiChangedBroadcastReceiver", "WifiChangedBroadcastReceiver: isConnectedToWifiWithName() : Wifi names do not match");
                     
                     return false;
                 }
@@ -137,13 +140,15 @@ public class WifiChangedBroadcastReceiver extends BroadcastReceiver
             else
             {
                 // Log info
-                Log.d("WifiChangedBroadcastReceiver", "Disconnected from wifi");
+                Log.d("WifiChangedBroadcastReceiver", "WifiChangedBroadcastReceiver: isConnectedToWifiWithName() : Disconnected from wifi");
                 
                 return false;
             }
         }
         else // If the name is null
         {
+            // Log info
+            Log.d("LightSwitchServicePlugin", "WifiChangedBroadcastReceiver: isConnectedToWifiWithName() [END]");
             return false;
         }
     }

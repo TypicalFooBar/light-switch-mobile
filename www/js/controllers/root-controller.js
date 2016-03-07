@@ -5,13 +5,15 @@ angular.module('light-switch-mobile.controllers', [])
     // Set root-scope variables
     $rootScope.localStorageKeys = {
         lightSwitchServer: {
-            protocol: 'lightSwitchServerProtocol',
-            address: 'lightSwitchServerAddress',
-            port: 'lightSwitchServerPort'
+            protocol: 'lightSwitchServer-Protocol',
+            address: 'lightSwitchServer-Address',
+            port: 'lightSwitchServer-Port'
         },
         lightSwitchService: {
-            wifiName: 'lightSwitchServiceWifiName',
-            lightSwitchIdList: 'lightSwitchIdList'
+            wifiName: 'lightSwitchService-WifiName',
+            welcomeHomeLights: {
+                lightSwitchIdList: 'lightSwitchService-welcomeHomeLights-lightSwitchIdList'
+            }
         }
     };
     

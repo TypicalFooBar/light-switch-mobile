@@ -25,11 +25,15 @@ public class LightSwitchServicePlugin extends CordovaPlugin
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException
     {
         // Log info
-        Log.d("LightSwitchServicePlugin", "execute() start");
+        Log.d("LightSwitchServicePlugin", "LightSwitchServicePlugin: execute() [START]");
+        Log.d("LightSwitchServicePlugin", "LightSwitchServicePlugin: Arguments - " + args.toString());
 
         // If the action is to start the service
         if(action.equals("start-service"))
         {
+            // Log info
+            Log.d("LightSwitchServicePlugin", "LightSwitchServicePlugin: execute() : action==\"start-service\"");
+            
             // Get arguments
             String wifiName = args.getString(0);
             String lightSwitchServerUrl = args.getString(1);
@@ -44,12 +48,15 @@ public class LightSwitchServicePlugin extends CordovaPlugin
             callbackContext.success(response);
             
             // Log info
-            Log.d("LightSwitchServicePlugin", "execute() end");
+            Log.d("LightSwitchServicePlugin", "LightSwitchServicePlugin: execute() [END]");
             
             return true;
         }
         else if (action.equals("stop-service")) // If the action is to stop the service
         {
+            // Log info
+            Log.d("LightSwitchServicePlugin", "LightSwitchServicePlugin: execute() : action==\"stop-service\"");
+            
             // Stop the service
             this.stopService();
             
@@ -59,31 +66,37 @@ public class LightSwitchServicePlugin extends CordovaPlugin
             callbackContext.success(response);
             
             // Log info
-            Log.d("LightSwitchServicePlugin", "execute() end");
+            Log.d("LightSwitchServicePlugin", "LightSwitchServicePlugin: execute() [END]");
             
             return true;
         }
         else if (action.equals("is-service-running")) // If the action is to check if the service is running
         {
+            // Log info
+            Log.d("LightSwitchServicePlugin", "LightSwitchServicePlugin: execute() : action==\"is-service-running\"");
+            
             // Create a JSON response to return to the view
             JSONObject response = new JSONObject();
             response.put("isServiceRunning", isServiceRunning(LightSwitchService.class));
             callbackContext.success(response);
             
             // Log info
-            Log.d("LightSwitchServicePlugin", "execute() end");
+            Log.d("LightSwitchServicePlugin", "LightSwitchServicePlugin: execute() [END]");
             
             return true;
         }
         else // Else, the action was unrecognized
         {
+            // Log info
+            Log.d("LightSwitchServicePlugin", "LightSwitchServicePlugin: execute() : Unrecognized action");
+            
             // Create a JSON response to return to the view
             JSONObject response = new JSONObject();
             response.put("message", "Unrecognized action requested.");
             callbackContext.error(response);
             
             // Log info
-            Log.d("LightSwitchServicePlugin", "execute() end");
+            Log.d("LightSwitchServicePlugin", "LightSwitchServicePlugin: execute() [END]");
             
             return false;
         }
@@ -99,7 +112,7 @@ public class LightSwitchServicePlugin extends CordovaPlugin
     private void startService(String wifiName, String lightSwitchServerUrl, String lightSwitchIdList)
     {
         // Log info
-        Log.d("LightSwitchServicePlugin", "startService() start");
+        Log.d("LightSwitchServicePlugin", "LightSwitchServicePlugin: startService() [START]");
         
         // Start the service
         Intent serviceIntent = new Intent(this.cordova.getActivity().getBaseContext(), LightSwitchService.class);
@@ -109,7 +122,7 @@ public class LightSwitchServicePlugin extends CordovaPlugin
         this.cordova.getActivity().startService(serviceIntent);
         
         // Log info
-        Log.d("LightSwitchServicePlugin", "startService() end");
+        Log.d("LightSwitchServicePlugin", "LightSwitchServicePlugin: startService() [END]");
     }
     
     /**
@@ -118,13 +131,13 @@ public class LightSwitchServicePlugin extends CordovaPlugin
     private void stopService()
     {
         // Log info
-        Log.d("LightSwitchServicePlugin", "stopService() start");
+        Log.d("LightSwitchServicePlugin", "LightSwitchServicePlugin: stopService() [START]");
         
         // Stop the service
         this.cordova.getActivity().stopService(new Intent(this.cordova.getActivity().getBaseContext(), LightSwitchService.class));
         
         // Log info
-        Log.d("LightSwitchServicePlugin", "stopService() end");
+        Log.d("LightSwitchServicePlugin", "LightSwitchServicePlugin: stopService() [END]");
     }
     
     /**
@@ -136,15 +149,24 @@ public class LightSwitchServicePlugin extends CordovaPlugin
      */
     private boolean isServiceRunning(Class<?> serviceClass)
     {
+        // Log info
+        Log.d("LightSwitchServicePlugin", "LightSwitchServicePlugin: isServiceRunning() [START]");
+        
         ActivityManager manager = (ActivityManager) this.cordova.getActivity().getBaseContext().getSystemService(this.cordova.getActivity().getBaseContext().ACTIVITY_SERVICE);
         for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
         {
             if (serviceClass.getName().equals(service.service.getClassName()))
             {
+                // Log info
+                Log.d("LightSwitchServicePlugin", "LightSwitchServicePlugin: isServiceRunning() [END]");
+                
                 // Service is running
                 return true;
             }
         }
+        
+        // Log info
+        Log.d("LightSwitchServicePlugin", "LightSwitchServicePlugin: isServiceRunning() [END]");
         
         // Service is not running
         return false;

@@ -39,8 +39,9 @@ public class HttpRequest implements Runnable
     @Override
     public void run()
     {
-        // Log the exception
-        Log.d("HttpRequest", "Making Request: " + this.url);
+        // Log info
+        Log.d("LightSwitchServicePlugin", "HttpRequest: run() [START]");
+        Log.d("LightSwitchServicePlugin", "HttpRequest: run() : url==\"" + this.url + "\"");
         
         // Variables
         URL url;
@@ -71,7 +72,7 @@ public class HttpRequest implements Runnable
         catch (Exception e)
         {
             // Log the exception
-            Log.d("HttpRequest", "Exception: " + e.toString());
+            Log.d("LightSwitchServicePlugin", "HttpRequest: run() : Exception - " + e.toString());
         }
         finally
         {
@@ -81,6 +82,9 @@ public class HttpRequest implements Runnable
                 // Disconnect from the server
                 connection.disconnect();
             }
+            
+            // Log info
+            Log.d("LightSwitchServicePlugin", "HttpRequest: run() [END]");
         }
     }
     
@@ -91,6 +95,9 @@ public class HttpRequest implements Runnable
      */
     public String getResponse()
     {
+        // Log info
+        Log.d("LightSwitchServicePlugin", "HttpRequest: getResponse() [START]");
+        
         try
         {
             // Create a new thread to run the HttpRequest (this object)
@@ -105,8 +112,12 @@ public class HttpRequest implements Runnable
         catch (Exception e)
         {
             // Log the exception
-            Log.d("HttpRequest", "Exception: " + e.toString());
+            Log.d("LightSwitchServicePlugin", "HttpRequest: run() : Exception - " + e.toString());
         }
+        
+        // Log info
+        Log.d("LightSwitchServicePlugin", "HttpRequest: getResponse() : response==\"" + this.response + "\"");
+        Log.d("LightSwitchServicePlugin", "HttpRequest: getResponse() [END]");
         
         // Return the response
         return this.response;
