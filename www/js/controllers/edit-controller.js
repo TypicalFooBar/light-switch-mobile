@@ -1,6 +1,6 @@
 angular.module('light-switch-mobile.controllers')
 
-.controller('EditController', function($scope, $rootScope, $http, $q, $ionicHistory, $ionicNavBarDelegate, $ionicLoading, $localStorage, $ionicPopup) {
+.controller('EditController', function($scope, $rootScope, $http, $q, $ionicHistory, $ionicNavBarDelegate, $ionicLoading, $localStorage, $ionicPopup, $timeout) {
     $scope.lightSwitchList = null;
     $scope.lightSwitchOriginalNames = [];
     

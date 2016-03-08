@@ -12,6 +12,8 @@ import android.content.Intent;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 
+import java.lang.Thread;
+
 /**
  * This plugin can start and stop the LightSwitchService.
  */
@@ -135,17 +137,24 @@ public class LightSwitchServicePlugin extends CordovaPlugin
         // Log info
         Log.d("LightSwitchServicePlugin", "LightSwitchServicePlugin: startService() [START]");
         
+        // Create the service starter and start it in a new thread
+        ServiceStarterRunnable serviceStarter = new ServiceStarterRunnable(this.cordova.getActivity().getBaseContext());
+        Thread thread = new Thread(serviceStarter);
+        
         // Start the service
-        Intent serviceIntent = new Intent(this.cordova.getActivity().getBaseContext(), LightSwitchService.class);
-        serviceIntent.putExtra("wifiName", wifiName);
-        serviceIntent.putExtra("lightSwitchServerUrl", lightSwitchServerUrl);
-        serviceIntent.putExtra("lightSwitchIdList", lightSwitchIdList);
-        serviceIntent.putExtra("startHour", startHour);
-        serviceIntent.putExtra("startMinute", startMinute);
-        serviceIntent.putExtra("endHour", endHour);
-        serviceIntent.putExtra("endMinute", endMinute);
-        serviceIntent.putExtra("minWifiDisconnectMinutes", minWifiDisconnectMinutes);
-        this.cordova.getActivity().startService(serviceIntent);
+        // Intent serviceIntent = new Intent(this.cordova.getActivity().getBaseContext(), LightSwitchService.class);
+        // serviceIntent.putExtra("wifiName", wifiName);
+        // serviceIntent.putExtra("lightSwitchServerUrl", lightSwitchServerUrl);
+        // serviceIntent.putExtra("lightSwitchIdList", lightSwitchIdList);
+        // serviceIntent.putExtra("startHour", startHour);
+        // serviceIntent.putExtra("startMinute", startMinute);
+        // serviceIntent.putExtra("endHour", endHour);
+        // serviceIntent.putExtra("endMinute", endMinute);
+        // serviceIntent.putExtra("minWifiDisconnectMinutes", minWifiDisconnectMinutes);
+        // this.cordova.getActivity().startService(serviceIntent);
+        
+        // Start the thread
+        thread.start();
         
         // Log info
         Log.d("LightSwitchServicePlugin", "LightSwitchServicePlugin: startService() [END]");
