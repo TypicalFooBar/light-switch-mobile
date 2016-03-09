@@ -16,8 +16,8 @@ angular.module('light-switch-mobile.controllers')
         welcomeHomeLights: {
             lightSwitchIdList: $localStorage.get($rootScope.localStorageKeys.lightSwitchService.welcomeHomeLights.lightSwitchIdList, []),
             timeOfDay: {
-                start: new Date($localStorage.get($rootScope.localStorageKeys.lightSwitchService.welcomeHomeLights.timeOfDay.start, '93600000')),
-                end: new Date($localStorage.get($rootScope.localStorageKeys.lightSwitchService.welcomeHomeLights.timeOfDay.end, '50400000'))
+                start: new Date($localStorage.get($rootScope.localStorageKeys.lightSwitchService.welcomeHomeLights.timeOfDay.start, 93600000)),
+                end: new Date($localStorage.get($rootScope.localStorageKeys.lightSwitchService.welcomeHomeLights.timeOfDay.end, 50400000))
             },
             minWifiDisconnectMinutes: $localStorage.get($rootScope.localStorageKeys.lightSwitchService.welcomeHomeLights.minWifiDisconnectMinutes, '10')
         }

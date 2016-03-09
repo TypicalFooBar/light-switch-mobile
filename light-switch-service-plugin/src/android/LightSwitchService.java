@@ -9,6 +9,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.Cursor;
 
 import java.lang.Thread;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 /**
  * This service starts a BroadcastListener to monitor changes in network connectivity.
@@ -68,7 +70,7 @@ public class LightSwitchService extends Service
                     SQLiteDatabase db = SQLiteDatabase.openDatabase("/data/data/com.ionicframework.lightswitchmobile461170/app_webview/Local Storage/file__0.localstorage", null, 0);
                     
                     // Log info
-                    Log.d("LightSwitchServicePlugin", "LightSwitchService: onStartCommand(): Database connection open:" + db.isOpen());
+                    Log.d("LightSwitchServicePlugin", "StartServiceRunnable: run(): Database connection open:" + db.isOpen());
                     
                     // Create the sql statement
                     String sql =
@@ -118,22 +120,45 @@ public class LightSwitchService extends Service
                     String endTime = cursor.getString(4);
                     minWifiDisconnectMinutes = cursor.getString(5);
                     
+                    // Log info
+                    Log.d("LightSwitchServicePlugin", "StartServiceRunnable: run(): wifiName=" + wifiName);
+                    Log.d("LightSwitchServicePlugin", "StartServiceRunnable: run(): lightSwitchServerUrl=" + lightSwitchServerUrl);
+                    Log.d("LightSwitchServicePlugin", "StartServiceRunnable: run(): lightSwitchIdList=" + lightSwitchIdList);
+                    Log.d("LightSwitchServicePlugin", "StartServiceRunnable: run(): startTime=" + startTime);
+                    Log.d("LightSwitchServicePlugin", "StartServiceRunnable: run(): endTime=" + endTime);
+                    Log.d("LightSwitchServicePlugin", "StartServiceRunnable: run(): minWifiDisconnectMinutes=" + minWifiDisconnectMinutes);
+                    
                     // If the wifiName is null, then let's retry connecting to the database (it may not have been written to, yet)
                     if (wifiName == null)
                     {
-                        throw new Exception("");
+                        throw new Exception("Table not populated, yet.");
                     }
                     
                     // Close the database
                     db.close();
                     
+                    // The patter to look for in the time strings
+                    Pattern timePattern = Pattern.compile("(..):");
+                    
+                    // Find the startHour and startMinute
+                    Matcher startMatcher = timePattern.matcher(startTime);
+                    startMatcher.find();
+                    startHour = startMatcher.group(1);
+                    startMatcher.find();
+                    startMinute = startMatcher.group(1);
+                    
+                    // Find the endHour and endMinute
+                    Matcher endMatcher = timePattern.matcher(endTime);
+                    endMatcher.find();
+                    endHour = endMatcher.group(1);
+                    endMatcher.find();
+                    endMinute = endMatcher.group(1);
+                    
                     // Log info
-                    Log.d("LightSwitchServicePlugin", "LightSwitchService: onStartCommand(): wifiName=" + wifiName);
-                    Log.d("LightSwitchServicePlugin", "LightSwitchService: onStartCommand(): lightSwitchServerUrl=" + lightSwitchServerUrl);
-                    Log.d("LightSwitchServicePlugin", "LightSwitchService: onStartCommand(): lightSwitchIdList=" + lightSwitchIdList);
-                    Log.d("LightSwitchServicePlugin", "LightSwitchService: onStartCommand(): startTime=" + startTime);
-                    Log.d("LightSwitchServicePlugin", "LightSwitchService: onStartCommand(): endTime=" + endTime);
-                    Log.d("LightSwitchServicePlugin", "LightSwitchService: onStartCommand(): minWifiDisconnectMinutes=" + minWifiDisconnectMinutes);
+                    Log.d("LightSwitchServicePlugin", "StartServiceRunnable: run(): startHour=" + startHour);
+                    Log.d("LightSwitchServicePlugin", "StartServiceRunnable: run(): startMinute=" + startMinute);
+                    Log.d("LightSwitchServicePlugin", "StartServiceRunnable: run(): endHour=" + endHour);
+                    Log.d("LightSwitchServicePlugin", "StartServiceRunnable: run(): endMinute=" + endMinute);
                     
                     // Leave the while loop
                     break;
@@ -141,7 +166,7 @@ public class LightSwitchService extends Service
                 catch (Exception e)
                 {
                     // Log info
-                    Log.d("LightSwitchServicePlugin", "LightSwitchService: onStartCommand(): Exception caught - retrying");
+                    Log.d("LightSwitchServicePlugin", "StartServiceRunnable: run(): Exception caught (" + e.toString() + ") - retrying");
                     
                     // Up the try count
                     tryCount++;
@@ -152,10 +177,10 @@ public class LightSwitchService extends Service
             this.wifiChangedBroadcastReceiver.setWifiName(wifiName);
             this.wifiChangedBroadcastReceiver.setLightSwitchServerUrl(lightSwitchServerUrl);
             this.wifiChangedBroadcastReceiver.setLightSwitchIdList(lightSwitchIdList);
-            this.wifiChangedBroadcastReceiver.setStartHour("20"); // TODO: Fix these hard-coded values
-            this.wifiChangedBroadcastReceiver.setStartMinute("1");
-            this.wifiChangedBroadcastReceiver.setEndHour("4");
-            this.wifiChangedBroadcastReceiver.setEndMinute("45");
+            this.wifiChangedBroadcastReceiver.setStartHour(startHour);
+            this.wifiChangedBroadcastReceiver.setStartMinute(startMinute);
+            this.wifiChangedBroadcastReceiver.setEndHour(endHour);
+            this.wifiChangedBroadcastReceiver.setEndMinute(endMinute);
             this.wifiChangedBroadcastReceiver.setMinWifiDisconnectMinutes(minWifiDisconnectMinutes);
             
             // Create the intent for the BroadcastReceiver
@@ -185,8 +210,7 @@ public class LightSwitchService extends Service
         Log.d("LightSwitchServicePlugin", "LightSwitchService: onStartCommand() [END]");
         
         // This will make sure the service is restarted if it is shut down by the OS
-        // and it will be passed the same intent that started the service the first time.
-        return Service.START_REDELIVER_INTENT;
+        return Service.START_STICKY;
     }
     
     /**
