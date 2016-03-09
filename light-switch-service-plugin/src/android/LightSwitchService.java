@@ -112,7 +112,7 @@ public class LightSwitchService extends Service
                     // Go to the first (and only) record
                     cursor.moveToNext();
                     
-                    // Get the name of the wifi
+                    // Get the values
                     wifiName = cursor.getString(0);
                     lightSwitchServerUrl = cursor.getString(1);
                     lightSwitchIdList = cursor.getString(2);

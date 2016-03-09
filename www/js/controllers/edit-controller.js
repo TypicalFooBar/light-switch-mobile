@@ -11,7 +11,7 @@ angular.module('light-switch-mobile.controllers')
     };
     
     $scope.lightSwitchService = {
-        running: false,
+        useService: $localStorage.get($rootScope.localStorageKeys.lightSwitchService.useService, 'false') === 'true',
         wifiName: $localStorage.get($rootScope.localStorageKeys.lightSwitchService.wifiName, ''),
         welcomeHomeLights: {
             lightSwitchIdList: $localStorage.get($rootScope.localStorageKeys.lightSwitchService.welcomeHomeLights.lightSwitchIdList, []),
@@ -106,6 +106,7 @@ angular.module('light-switch-mobile.controllers')
         $localStorage.set($rootScope.localStorageKeys.lightSwitchServer.port, $scope.lightSwitchServer.port);
         
         // Update the Service Settings
+        $localStorage.set($rootScope.localStorageKeys.lightSwitchService.useService, $scope.lightSwitchService.useService);
         $localStorage.set($rootScope.localStorageKeys.lightSwitchService.wifiName, $scope.lightSwitchService.wifiName);
         $localStorage.set($rootScope.localStorageKeys.lightSwitchService.welcomeHomeLights.lightSwitchIdList, $scope.lightSwitchService.welcomeHomeLights.lightSwitchIdList);
         $localStorage.set($rootScope.localStorageKeys.lightSwitchService.welcomeHomeLights.timeOfDay.start, $scope.lightSwitchService.welcomeHomeLights.timeOfDay.start);
@@ -148,7 +149,7 @@ angular.module('light-switch-mobile.controllers')
     };
     
     $scope.toggleWelcomeHomeLights = function() {
-        if ($scope.lightSwitchService.running == true) {
+        if ($scope.lightSwitchService.useService == true) {
             // Save before starting the service, but do not go back to the home page
             $scope.save(false, function() {
                 $scope.startService();

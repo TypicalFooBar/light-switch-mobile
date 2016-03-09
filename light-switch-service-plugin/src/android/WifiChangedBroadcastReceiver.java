@@ -216,6 +216,9 @@ public class WifiChangedBroadcastReceiver extends BroadcastReceiver
                 // Set the disconnected time as now
                 wifiDisconnectedTime = Calendar.getInstance();
             }
+            
+            // Set the disconnected time as now
+            wifiDisconnectedTime = Calendar.getInstance();
         }
         
         // Log info

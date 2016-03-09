@@ -4,33 +4,33 @@
         <div class="list">
             <label class="item item-input item-stacked-label" ng-repeat="lightSwitch in lightSwitchList">
                 <span class="input-label">Outlet {{$index + 1}}</span>
-                <input class="edit-name-input" type="text" ng-model="lightSwitch.name" ng-disabled="lightSwitchService.running">
+                <input class="edit-name-input" type="text" ng-model="lightSwitch.name" ng-disabled="lightSwitchService.useService">
             </label>
         </div>
         <h2>Server Settings</h2>
         <label class="item item-input item-stacked-label">
             <span class="input-label">Light Switch Server Protocol</span>
-            <input class="edit-name-input" type="text" ng-model="lightSwitchServer.protocol" ng-disabled="lightSwitchService.running">
+            <input class="edit-name-input" type="text" ng-model="lightSwitchServer.protocol" ng-disabled="lightSwitchService.useService">
         </label>
         <label class="item item-input item-stacked-label">
             <span class="input-label">Light Switch Server Address</span>
-            <input class="edit-name-input" type="text" ng-model="lightSwitchServer.address" ng-disabled="lightSwitchService.running">
+            <input class="edit-name-input" type="text" ng-model="lightSwitchServer.address" ng-disabled="lightSwitchService.useService">
         </label>
         <label class="item item-input item-stacked-label">
             <span class="input-label">Light Switch Server Port</span>
-            <input class="edit-name-input" type="text" ng-model="lightSwitchServer.port" ng-disabled="lightSwitchService.running">
+            <input class="edit-name-input" type="text" ng-model="lightSwitchServer.port" ng-disabled="lightSwitchService.useService">
         </label>
         <h2>Welcome Home Lights</h2>
         <label class="item item-input item-stacked-label">
             <span class="input-label">Wifi Name</span>
-            <input class="edit-name-input" type="text" ng-model="lightSwitchService.wifiName" ng-disabled="lightSwitchService.running">
+            <input class="edit-name-input" type="text" ng-model="lightSwitchService.wifiName" ng-disabled="lightSwitchService.useService">
         </label>
         <label class="item item-input item-stacked-label">
             <span class="input-label">Set Welcome Home Lights</span>
             <label class="item item-toggle" ng-repeat="lightSwitch in lightSwitchList">
                 {{lightSwitch.name}}
                 <label class="toggle">
-                    <input type="checkbox" ng-model="lightSwitch.useWithService" ng-disabled="lightSwitchService.running" ng-change="toggleLightSwitchIdList(lightSwitch.id)">
+                    <input type="checkbox" ng-model="lightSwitch.useWithService" ng-disabled="lightSwitchService.useService" ng-change="toggleLightSwitchIdList(lightSwitch.id)">
                     <div class="track">
                         <div class="handle"></div>
                     </div>
@@ -39,20 +39,20 @@
         </label>
         <label class="item item-input item-stacked-label">
             <span class="input-label">Start Time</span>
-            <input class="edit-name-input" type="time" ng-model="lightSwitchService.welcomeHomeLights.timeOfDay.start" ng-disabled="lightSwitchService.running">
+            <input class="edit-name-input" type="time" ng-model="lightSwitchService.welcomeHomeLights.timeOfDay.start" ng-disabled="lightSwitchService.useService">
         </label>
         <label class="item item-input item-stacked-label">
             <span class="input-label">End Time</span>
-            <input class="edit-name-input" type="time" ng-model="lightSwitchService.welcomeHomeLights.timeOfDay.end" ng-disabled="lightSwitchService.running">
+            <input class="edit-name-input" type="time" ng-model="lightSwitchService.welcomeHomeLights.timeOfDay.end" ng-disabled="lightSwitchService.useService">
         </label>
         <label class="item item-input item-stacked-label">
             <span class="input-label">Minutes Disconnected From Wifi Before Using Lights</span>
-            <input class="edit-name-input" type="text" ng-model="lightSwitchService.welcomeHomeLights.minWifiDisconnectMinutes" ng-disabled="lightSwitchService.running">
+            <input class="edit-name-input" type="text" ng-model="lightSwitchService.welcomeHomeLights.minWifiDisconnectMinutes" ng-disabled="lightSwitchService.useService">
         </label>
         <label class="item item-toggle">
             Use Welcome Home Lights
             <label class="toggle">
-                <input type="checkbox" ng-model="lightSwitchService.running" ng-disabled="lightSwitchService.wifiName == ''" ng-change="toggleWelcomeHomeLights()">
+                <input type="checkbox" ng-model="lightSwitchService.useService" ng-disabled="lightSwitchService.wifiName == ''" ng-change="toggleWelcomeHomeLights()">
                 <div class="track">
                     <div class="handle"></div>
                 </div>
