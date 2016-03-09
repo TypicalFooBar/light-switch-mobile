@@ -28,7 +28,6 @@ public class LightSwitchServicePlugin extends CordovaPlugin
     {
         // Log info
         Log.d("LightSwitchServicePlugin", "LightSwitchServicePlugin: execute() [START]");
-        Log.d("LightSwitchServicePlugin", "LightSwitchServicePlugin: Arguments - " + args.toString());
 
         // If the action is to start the service
         if(action.equals("start-service"))
@@ -36,26 +35,9 @@ public class LightSwitchServicePlugin extends CordovaPlugin
             // Log info
             Log.d("LightSwitchServicePlugin", "LightSwitchServicePlugin: execute() : action==\"start-service\"");
             
-            // Get arguments
-            String wifiName = args.getString(0);
-            String lightSwitchServerUrl = args.getString(1);
-            String lightSwitchIdList = args.getJSONArray(2).toString().replace("[", "").replace("]", "");
-            String startHour = args.getString(3);
-            String startMinute = args.getString(4);
-            String endHour = args.getString(5);
-            String endMinute = args.getString(6);
-            String minWifiDisconnectMinutes = args.getString(7);
-            
-            // Start the service with these arguments
-            this.startService(
-                wifiName,
-                lightSwitchServerUrl,
-                lightSwitchIdList,
-                startHour,
-                startMinute,
-                endHour,
-                endMinute,
-                minWifiDisconnectMinutes);
+            // Start the service
+            Intent serviceIntent = new Intent(this.cordova.getActivity().getBaseContext(), LightSwitchService.class);
+            this.cordova.getActivity().startService(serviceIntent);
             
             // Create a JSON response to return to the view
             JSONObject response = new JSONObject();
@@ -73,7 +55,7 @@ public class LightSwitchServicePlugin extends CordovaPlugin
             Log.d("LightSwitchServicePlugin", "LightSwitchServicePlugin: execute() : action==\"stop-service\"");
             
             // Stop the service
-            this.stopService();
+            this.cordova.getActivity().stopService(new Intent(this.cordova.getActivity().getBaseContext(), LightSwitchService.class));
             
             // Create a JSON response to return to the view
             JSONObject response = new JSONObject();
@@ -115,64 +97,6 @@ public class LightSwitchServicePlugin extends CordovaPlugin
             
             return false;
         }
-    }
-    
-    /**
-     * Starts the service.
-     *
-     * @param wifiName The wifi router's name to check when connecting to a new router.
-     * @param lightSwitchServerUrl The Light Switch Server URL to connect to.
-     * @param lightSwitchIdList The Light Switch IDs to turn on.
-     */
-    private void startService(
-        String wifiName,
-        String lightSwitchServerUrl,
-        String lightSwitchIdList,
-        String startHour,
-        String startMinute,
-        String endHour,
-        String endMinute,
-        String minWifiDisconnectMinutes)
-    {
-        // Log info
-        Log.d("LightSwitchServicePlugin", "LightSwitchServicePlugin: startService() [START]");
-        
-        // Create the service starter and start it in a new thread
-        ServiceStarterRunnable serviceStarter = new ServiceStarterRunnable(this.cordova.getActivity().getBaseContext());
-        Thread thread = new Thread(serviceStarter);
-        
-        // Start the service
-        // Intent serviceIntent = new Intent(this.cordova.getActivity().getBaseContext(), LightSwitchService.class);
-        // serviceIntent.putExtra("wifiName", wifiName);
-        // serviceIntent.putExtra("lightSwitchServerUrl", lightSwitchServerUrl);
-        // serviceIntent.putExtra("lightSwitchIdList", lightSwitchIdList);
-        // serviceIntent.putExtra("startHour", startHour);
-        // serviceIntent.putExtra("startMinute", startMinute);
-        // serviceIntent.putExtra("endHour", endHour);
-        // serviceIntent.putExtra("endMinute", endMinute);
-        // serviceIntent.putExtra("minWifiDisconnectMinutes", minWifiDisconnectMinutes);
-        // this.cordova.getActivity().startService(serviceIntent);
-        
-        // Start the thread
-        thread.start();
-        
-        // Log info
-        Log.d("LightSwitchServicePlugin", "LightSwitchServicePlugin: startService() [END]");
-    }
-    
-    /**
-     * Stops the service.
-     */
-    private void stopService()
-    {
-        // Log info
-        Log.d("LightSwitchServicePlugin", "LightSwitchServicePlugin: stopService() [START]");
-        
-        // Stop the service
-        this.cordova.getActivity().stopService(new Intent(this.cordova.getActivity().getBaseContext(), LightSwitchService.class));
-        
-        // Log info
-        Log.d("LightSwitchServicePlugin", "LightSwitchServicePlugin: stopService() [END]");
     }
     
     /**
