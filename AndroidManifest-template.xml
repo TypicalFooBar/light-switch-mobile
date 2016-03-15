@@ -16,7 +16,6 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
-        <service android:name="com.typicalfoobar.lightswitch.LightSwitchService" />
     </application>
     <uses-sdk android:minSdkVersion="16" android:targetSdkVersion="23" />
 </manifest>

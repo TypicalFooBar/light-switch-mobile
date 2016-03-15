@@ -55,7 +55,7 @@ public class LocalStorage
         catch (Exception e)
         {
             // Log info
-            Log.d("LightSwitchServicePlugin", "LocalStorage: populateFromDb(): Exception caught (" + e.toString() + ")");
+            Log.d("LightSwitchCordovaPlugin", "LocalStorage: populateFromDb(): Exception caught (" + e.toString() + ")");
         }
 
         // Return the object
@@ -70,7 +70,7 @@ public class LocalStorage
             SQLiteDatabase db = SQLiteDatabase.openDatabase("/data/data/com.ionicframework.lightswitchmobile461170/app_webview/Local Storage/file__0.localstorage", null, 0);
             
             // Log info
-            Log.d("LightSwitchServicePlugin", "LocalStorage: updateConnectedToSpecifiedWifiInDb(): Database connection open:" + db.isOpen());
+            Log.d("LightSwitchCordovaPlugin", "LocalStorage: updateConnectedToSpecifiedWifiInDb(): Database connection open:" + db.isOpen());
             
             // Create the sql statement
             String updateSql = "update ItemTable set Value = '" + value + "' where Key = '" + key + "'";
@@ -84,7 +84,7 @@ public class LocalStorage
         catch (Exception e)
         {
             // Log info
-            Log.d("LightSwitchServicePlugin", "LocalStorage: updateLastWifiDisconnectedTimeInDb(): Exception caught (" + e.toString() + ")");
+            Log.d("LightSwitchCordovaPlugin", "LocalStorage: updateLastWifiDisconnectedTimeInDb(): Exception caught (" + e.toString() + ")");
         }
     }
 }

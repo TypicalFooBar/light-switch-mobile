@@ -12,7 +12,7 @@
     <platform name="android">
         <framework src="com.google.code.gson:gson:1.7.2" />
         <config-file target="res/xml/config.xml" parent="/*">
-            <feature name="LightSwitchServicePlugin">
+            <feature name="LightSwitchCordovaPlugin">
                 <param name="android-package" value="com.typicalfoobar.lightswitch.cordovaplugin" />
             </feature>
         </config-file>

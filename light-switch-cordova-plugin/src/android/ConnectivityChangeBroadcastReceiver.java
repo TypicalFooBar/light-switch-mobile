@@ -18,7 +18,7 @@ public class ConnectivityChangeBroadcastReceiver extends BroadcastReceiver
     public void onReceive(Context context, Intent intent)
     {
         // Log info
-        Log.d("LightSwitchServicePlugin", "ConnectivityChangeBroadcastReceiver: onReceive() [START]");
+        Log.d("LightSwitchCordovaPlugin", "ConnectivityChangeBroadcastReceiver: onReceive() [START]");
         
         // Start a new thread to handle the state changed
         HandleConnectivityChangeRunnable runnable = new HandleConnectivityChangeRunnable(context);
@@ -26,6 +26,6 @@ public class ConnectivityChangeBroadcastReceiver extends BroadcastReceiver
         thread.start();
         
         // Log info
-        Log.d("LightSwitchServicePlugin", "ConnectivityChangeBroadcastReceiver: onReceive() [END]"); 
+        Log.d("LightSwitchCordovaPlugin", "ConnectivityChangeBroadcastReceiver: onReceive() [END]"); 
     }
 }

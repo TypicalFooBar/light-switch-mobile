@@ -30,7 +30,7 @@ public class HandleConnectivityChangeRunnable implements Runnable
     public void run()
     {
         // Log info
-        Log.d("LightSwitchServicePlugin", "HandleConnectivityChangeRunnable: onReceive() [START]");
+        Log.d("LightSwitchCordovaPlugin", "HandleConnectivityChangeRunnable: onReceive() [START]");
         
         // Create the object to set/get info to/from the local storage SQLite database
         LocalStorage localStorage = new LocalStorage();
@@ -42,7 +42,7 @@ public class HandleConnectivityChangeRunnable implements Runnable
             if (localStorage.clientSettings.welcomeHomeLights.active)
             {
                 // Log info
-                Log.d("LightSwitchServicePlugin", "HandleConnectivityChangeRunnable: Welcome Home Lights are active");
+                Log.d("LightSwitchCordovaPlugin", "HandleConnectivityChangeRunnable: Welcome Home Lights are active");
                 
                 // If the WifiStateInfo object is null, create a new one
                 if (localStorage.wifiStateInfo == null)
@@ -54,7 +54,7 @@ public class HandleConnectivityChangeRunnable implements Runnable
                 if (getWifiName(context).equals(localStorage.clientSettings.welcomeHomeLights.wifiName))
                 {
                     // Log info
-                    Log.d("LightSwitchServicePlugin", "HandleConnectivityChangeRunnable: Wifi name matches");
+                    Log.d("LightSwitchCordovaPlugin", "HandleConnectivityChangeRunnable: Wifi name matches");
                     
                     // Save the fact that we are connected to the right wifi
                     localStorage.wifiStateInfo.connectedToSpecifiedWifi = true;
@@ -74,7 +74,7 @@ public class HandleConnectivityChangeRunnable implements Runnable
                     }
                     
                     // Log info
-                    Log.d("LightSwitchServicePlugin", "HandleConnectivityChangeRunnable: WifiStateJson=" + this.gson.toJson(localStorage.wifiStateInfo, WifiStateInfo.class));
+                    Log.d("LightSwitchCordovaPlugin", "HandleConnectivityChangeRunnable: WifiStateJson=" + this.gson.toJson(localStorage.wifiStateInfo, WifiStateInfo.class));
                 }
                 else
                 {
@@ -82,13 +82,13 @@ public class HandleConnectivityChangeRunnable implements Runnable
                     Boolean setLastWifiDisconnectedTime = false;
                     
                     // Log info
-                    Log.d("LightSwitchServicePlugin", "HandleConnectivityChangeRunnable: Disconnected from the correct wifi");
+                    Log.d("LightSwitchCordovaPlugin", "HandleConnectivityChangeRunnable: Disconnected from the correct wifi");
                     
                     // If we were connected to the correct wifi, but are no longer connected
                     if (localStorage.wifiStateInfo.connectedToSpecifiedWifi == true)
                     {
                         // Log info
-                        Log.d("LightSwitchServicePlugin", "HandleConnectivityChangeRunnable: Device was previously connected to the correct wifi");
+                        Log.d("LightSwitchCordovaPlugin", "HandleConnectivityChangeRunnable: Device was previously connected to the correct wifi");
                     
                         // Save info
                         localStorage.wifiStateInfo.connectedToSpecifiedWifi = false; // Save the fact that we are disconnected from the right wifi
@@ -112,7 +112,7 @@ public class HandleConnectivityChangeRunnable implements Runnable
         }
         
         // Log info
-        Log.d("LightSwitchServicePlugin", "HandleConnectivityChangeRunnable: onReceive() [END]");
+        Log.d("LightSwitchCordovaPlugin", "HandleConnectivityChangeRunnable: onReceive() [END]");
     }
     
     private Boolean isBetweenStartAndEndTimes(Date startTime, Date endTime, Date lastWifiDisconnectedTime, int minWifiDisconnectMinutes)
@@ -175,7 +175,7 @@ public class HandleConnectivityChangeRunnable implements Runnable
         if (networkInfo.isConnected())
         {
             // Log info
-            Log.d("LightSwitchServicePlugin", "HandleConnectivityChangeRunnable: isConnectedToWifiWithName() : Connected to wifi");
+            Log.d("LightSwitchCordovaPlugin", "HandleConnectivityChangeRunnable: isConnectedToWifiWithName() : Connected to wifi");
             
             // Get the name of this router
             WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);

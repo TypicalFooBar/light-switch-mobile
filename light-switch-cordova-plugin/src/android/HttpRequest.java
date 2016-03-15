@@ -40,8 +40,8 @@ public class HttpRequest implements Runnable
     public void run()
     {
         // Log info
-        Log.d("LightSwitchServicePlugin", "HttpRequest: run() [START]");
-        Log.d("LightSwitchServicePlugin", "HttpRequest: run() : url==\"" + this.url + "\"");
+        Log.d("LightSwitchCordovaPlugin", "HttpRequest: run() [START]");
+        Log.d("LightSwitchCordovaPlugin", "HttpRequest: run() : url==\"" + this.url + "\"");
         
         // Variables
         URL url;
@@ -72,7 +72,7 @@ public class HttpRequest implements Runnable
         catch (Exception e)
         {
             // Log the exception
-            Log.d("LightSwitchServicePlugin", "HttpRequest: run() : Exception - " + e.toString());
+            Log.d("LightSwitchCordovaPlugin", "HttpRequest: run() : Exception - " + e.toString());
         }
         finally
         {
@@ -84,7 +84,7 @@ public class HttpRequest implements Runnable
             }
             
             // Log info
-            Log.d("LightSwitchServicePlugin", "HttpRequest: run() [END]");
+            Log.d("LightSwitchCordovaPlugin", "HttpRequest: run() [END]");
         }
     }
     
@@ -96,7 +96,7 @@ public class HttpRequest implements Runnable
     public String getResponse()
     {
         // Log info
-        Log.d("LightSwitchServicePlugin", "HttpRequest: getResponse() [START]");
+        Log.d("LightSwitchCordovaPlugin", "HttpRequest: getResponse() [START]");
         
         try
         {
@@ -112,12 +112,12 @@ public class HttpRequest implements Runnable
         catch (Exception e)
         {
             // Log the exception
-            Log.d("LightSwitchServicePlugin", "HttpRequest: run() : Exception - " + e.toString());
+            Log.d("LightSwitchCordovaPlugin", "HttpRequest: run() : Exception - " + e.toString());
         }
         
         // Log info
-        Log.d("LightSwitchServicePlugin", "HttpRequest: getResponse() : response==\"" + this.response + "\"");
-        Log.d("LightSwitchServicePlugin", "HttpRequest: getResponse() [END]");
+        Log.d("LightSwitchCordovaPlugin", "HttpRequest: getResponse() : response==\"" + this.response + "\"");
+        Log.d("LightSwitchCordovaPlugin", "HttpRequest: getResponse() [END]");
         
         // Return the response
         return this.response;
