@@ -21,34 +21,6 @@
             <input class="edit-name-input" type="text" ng-model="clientSettings.server.port">
         </label>
         <h2>Welcome Home Lights</h2>
-        <label class="item item-input item-stacked-label">
-            <span class="input-label">Wifi Name</span>
-            <input class="edit-name-input" type="text" ng-model="clientSettings.welcomeHomeLights.wifiName">
-        </label>
-        <label class="item item-input item-stacked-label">
-            <span class="input-label">Set Welcome Home Lights</span>
-            <label class="item item-toggle" ng-repeat="lightSwitch in lightSwitchList">
-                {{lightSwitch.name}}
-                <label class="toggle">
-                    <input type="checkbox" ng-model="lightSwitch.useAsWelcomeHomeLight" ng-change="toggleLightSwitchIdList(lightSwitch.id)">
-                    <div class="track">
-                        <div class="handle"></div>
-                    </div>
-                </label>
-            </label>
-        </label>
-        <label class="item item-input item-stacked-label">
-            <span class="input-label">Start Time</span>
-            <input class="edit-name-input" type="time" ng-model="clientSettings.welcomeHomeLights.timeOfDay.start">
-        </label>
-        <label class="item item-input item-stacked-label">
-            <span class="input-label">End Time</span>
-            <input class="edit-name-input" type="time" ng-model="clientSettings.welcomeHomeLights.timeOfDay.end">
-        </label>
-        <label class="item item-input item-stacked-label">
-            <span class="input-label">Minutes Disconnected From Wifi Before Using Lights</span>
-            <input class="edit-name-input" type="text" ng-model="clientSettings.welcomeHomeLights.minWifiDisconnectMinutes">
-        </label>
         <label class="item item-toggle">
             Use Welcome Home Lights
             <label class="toggle">
@@ -57,6 +29,34 @@
                     <div class="handle"></div>
                 </div>
             </label>
+        </label>
+        <label class="item item-input item-stacked-label">
+            <span class="input-label">Wifi Name</span>
+            <input class="edit-name-input" type="text" ng-model="clientSettings.welcomeHomeLights.wifiName" ng-disabled="!clientSettings.welcomeHomeLights.active">
+        </label>
+        <label class="item item-input item-stacked-label">
+            <span class="input-label">Set Welcome Home Lights</span>
+            <label class="item item-toggle" ng-repeat="lightSwitch in lightSwitchList">
+                {{lightSwitch.name}}
+                <label class="toggle">
+                    <input type="checkbox" ng-model="lightSwitch.useAsWelcomeHomeLight" ng-change="toggleLightSwitchIdList(lightSwitch.id)" ng-disabled="!clientSettings.welcomeHomeLights.active">
+                    <div class="track">
+                        <div class="handle"></div>
+                    </div>
+                </label>
+            </label>
+        </label>
+        <label class="item item-input item-stacked-label">
+            <span class="input-label">Start Time</span>
+            <input class="edit-name-input" type="time" ng-model="clientSettings.welcomeHomeLights.timeOfDay.start" ng-disabled="!clientSettings.welcomeHomeLights.active">
+        </label>
+        <label class="item item-input item-stacked-label">
+            <span class="input-label">End Time</span>
+            <input class="edit-name-input" type="time" ng-model="clientSettings.welcomeHomeLights.timeOfDay.end" ng-disabled="!clientSettings.welcomeHomeLights.active">
+        </label>
+        <label class="item item-input item-stacked-label">
+            <span class="input-label">Minutes Disconnected From Wifi Before Using Lights</span>
+            <input class="edit-name-input" type="text" ng-model="clientSettings.welcomeHomeLights.minWifiDisconnectMinutes" ng-disabled="!clientSettings.welcomeHomeLights.active">
         </label>
         <button class="button button-full button-dark" ng-click="save(true, null)">Save</button>
     </ion-content>
