@@ -4,65 +4,56 @@ angular.module('light-switch-mobile.controllers')
     $scope.lightSwitchList = null;
     $scope.lightSwitchOriginalNames = [];
     
-    $scope.lightSwitchServer = {
-        protocol: $localStorage.get($rootScope.localStorageKeys.lightSwitchServer.protocol, 'http'),
-        address: $localStorage.get($rootScope.localStorageKeys.lightSwitchServer.address, '192.168.1.116'),
-        port: $localStorage.get($rootScope.localStorageKeys.lightSwitchServer.port, '80')
-    };
-    
-    $scope.lightSwitchService = {
-        useService: $localStorage.get($rootScope.localStorageKeys.lightSwitchService.useService, 'false') === 'true',
-        wifiName: $localStorage.get($rootScope.localStorageKeys.lightSwitchService.wifiName, ''),
+    // Client settings start out with default values
+    $scope.clientSettings = {
+        server: {
+            protocol: 'http',
+            address: '192.168.1.116',
+            port: 80
+        },
         welcomeHomeLights: {
-            lightSwitchIdList: $localStorage.get($rootScope.localStorageKeys.lightSwitchService.welcomeHomeLights.lightSwitchIdList, []),
+            active: false,
+            wifiName: '',
+            lightSwitchIdList: [],
             timeOfDay: {
-                start: new Date($localStorage.get($rootScope.localStorageKeys.lightSwitchService.welcomeHomeLights.timeOfDay.start, 93600000)),
-                end: new Date($localStorage.get($rootScope.localStorageKeys.lightSwitchService.welcomeHomeLights.timeOfDay.end, 50400000))
+                start: new Date(93600000),
+                end: new Date(50400000)
             },
-            minWifiDisconnectMinutes: $localStorage.get($rootScope.localStorageKeys.lightSwitchService.welcomeHomeLights.minWifiDisconnectMinutes, '10')
+            minWifiDisconnectMinutes: 10
         }
-    }
+    };
     
     $scope.init = function() {
         $ionicNavBarDelegate.showBackButton(true);
         
         $scope.getLightSwitchList();
         
-        // Check if the service is running
-        window.LightSwitchServicePlugin.isServiceRunning(
-            function(response) { // Success
-                if (response.isServiceRunning == true) {
-                    $scope.lightSwitchService.running = true;
-                }
-            },
-            function(response) { // Error
-            });
-
-        // If it's a comma-delimited string
-        if ($scope.lightSwitchService.welcomeHomeLights.lightSwitchIdList.indexOf(',') > -1) {
-            // Turn it into an array of integers
-            $scope.lightSwitchService.welcomeHomeLights.lightSwitchIdList = $scope.lightSwitchService.welcomeHomeLights.lightSwitchIdList.split(',').map(Number);
-        }
-        // Else, if it is just one number with no comma (but not yet an array)
-        else if ($scope.lightSwitchService.welcomeHomeLights.lightSwitchIdList.length > 0) {
-            var value = parseInt($scope.lightSwitchService.welcomeHomeLights.lightSwitchIdList);
-            $scope.lightSwitchService.welcomeHomeLights.lightSwitchIdList = [];
-            $scope.lightSwitchService.welcomeHomeLights.lightSwitchIdList.push(value);
+        // Get the client settings json string
+        var clientSettingsJsonString = $localStorage.get('ClientSettings', null);
+        
+        // If not null
+        if (clientSettingsJsonString != null) {
+            // Set the client settings object to the values from the localstorage database
+            $scope.clientSettings = angular.fromJson(clientSettingsJsonString);
+            
+            // Convert the start and end strings to dates
+            $scope.clientSettings.welcomeHomeLights.timeOfDay.start = new Date($scope.clientSettings.welcomeHomeLights.timeOfDay.start);
+            $scope.clientSettings.welcomeHomeLights.timeOfDay.end = new Date($scope.clientSettings.welcomeHomeLights.timeOfDay.end);
         }
     };
     
     $scope.toggleLightSwitchIdList = function(id) {
         // Find the index of the ID
-        var index = $scope.lightSwitchService.welcomeHomeLights.lightSwitchIdList.indexOf(id)
+        var index = $scope.clientSettings.welcomeHomeLights.lightSwitchIdList.indexOf(id)
         
         // If the ID is not in the list
         if (index == -1) {
             // Add the ID to the list
-            $scope.lightSwitchService.welcomeHomeLights.lightSwitchIdList.push(id);
+            $scope.clientSettings.welcomeHomeLights.lightSwitchIdList.push(id);
         }
         else { // Else, if the ID is in the list
             // Remove the ID from the list
-            $scope.lightSwitchService.welcomeHomeLights.lightSwitchIdList.splice(index, 1);
+            $scope.clientSettings.welcomeHomeLights.lightSwitchIdList.splice(index, 1);
         }
     };
     
@@ -77,13 +68,13 @@ angular.module('light-switch-mobile.controllers')
                 
                 // Add a variable to the light switch object to track if it is used with the service.
                 // If the light switch's ID is already in the list of light switches to use.
-                if ($scope.lightSwitchService.welcomeHomeLights.lightSwitchIdList.indexOf(lightSwitch.id) > -1) {
+                if ($scope.clientSettings.welcomeHomeLights.lightSwitchIdList.indexOf(lightSwitch.id) > -1) {
                     // Set it to true
-                    lightSwitch.useWithService = true;
+                    lightSwitch.useAsWelcomeHomeLight = true;
                 }
                 else {
                     // Else, set it to false
-                    lightSwitch.useWithService = false;
+                    lightSwitch.useAsWelcomeHomeLight = false;
                 }
             });
         }, function error(response) {
@@ -97,21 +88,14 @@ angular.module('light-switch-mobile.controllers')
             template: 'Saving...'
         });
         
+        // Save the client settings
+        // Change toJSON() to use toString() for the dates, otherwise it defaults to toISOString().
+        $scope.clientSettings.welcomeHomeLights.timeOfDay.start.toJSON = function() { return this.toString(); }
+        $scope.clientSettings.welcomeHomeLights.timeOfDay.end.toJSON = function() { return this.toString(); }
+        $localStorage.set('ClientSettings', angular.toJson($scope.clientSettings));
+        
         // List to store the http calls, so we know when they all have finished
         var httpCalls = [];
-        
-        // Update the Server Settings
-        $localStorage.set($rootScope.localStorageKeys.lightSwitchServer.protocol, $scope.lightSwitchServer.protocol);
-        $localStorage.set($rootScope.localStorageKeys.lightSwitchServer.address, $scope.lightSwitchServer.address);
-        $localStorage.set($rootScope.localStorageKeys.lightSwitchServer.port, $scope.lightSwitchServer.port);
-        
-        // Update the Service Settings
-        $localStorage.set($rootScope.localStorageKeys.lightSwitchService.useService, $scope.lightSwitchService.useService);
-        $localStorage.set($rootScope.localStorageKeys.lightSwitchService.wifiName, $scope.lightSwitchService.wifiName);
-        $localStorage.set($rootScope.localStorageKeys.lightSwitchService.welcomeHomeLights.lightSwitchIdList, $scope.lightSwitchService.welcomeHomeLights.lightSwitchIdList);
-        $localStorage.set($rootScope.localStorageKeys.lightSwitchService.welcomeHomeLights.timeOfDay.start, $scope.lightSwitchService.welcomeHomeLights.timeOfDay.start);
-        $localStorage.set($rootScope.localStorageKeys.lightSwitchService.welcomeHomeLights.timeOfDay.end, $scope.lightSwitchService.welcomeHomeLights.timeOfDay.end);
-        $localStorage.set($rootScope.localStorageKeys.lightSwitchService.welcomeHomeLights.minWifiDisconnectMinutes, $scope.lightSwitchService.welcomeHomeLights.minWifiDisconnectMinutes);
         
         // Make sure the light switch list is NOT null
         if ($scope.lightSwitchList != null) {
@@ -146,50 +130,6 @@ angular.module('light-switch-mobile.controllers')
                 finishedSavingCallback();
             }
         });
-    };
-    
-    $scope.toggleWelcomeHomeLights = function() {
-        if ($scope.lightSwitchService.useService == true) {
-            // Save before starting the service, but do not go back to the home page
-            $scope.save(false, function() {
-                $scope.startService();
-            });
-        }
-        else {
-            $scope.stopService();
-        }
-    }
-    
-    $scope.startService = function() {
-        window.LightSwitchServicePlugin.startService(
-            function(response) { // Success
-                $ionicPopup.alert({
-                    title: 'Service Response',
-                    template: response.message
-                });
-            },
-            function(response) { // Error
-                $ionicPopup.alert({
-                    title: 'Service Response',
-                    template: response.message
-                });
-            });
-    };
-    
-    $scope.stopService = function() {
-        window.LightSwitchServicePlugin.stopService(
-            function(response) { // Success
-                $ionicPopup.alert({
-                    title: 'Service Response',
-                    template: response.message
-                });
-            },
-            function(response) { // Error
-                $ionicPopup.alert({
-                    title: 'Service Response',
-                    template: response.message
-                });
-            });
     };
     
     $scope.init();

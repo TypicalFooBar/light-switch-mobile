@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
+        id="com.typicalfoobar.lightswitch.cordovaplugin"
+        version="1.0.0">
+    
+    <name>Light Switch Plugin</name>
+    
+    <engines>
+        <engine name="cordova" version=">=3.4.0" />
+    </engines>
+    
+    <platform name="android">
+        <framework src="com.google.code.gson:gson:1.7.2" />
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="LightSwitchServicePlugin">
+                <param name="android-package" value="com.typicalfoobar.lightswitch.cordovaplugin" />
+            </feature>
+        </config-file>
+        
+        <source-file src="src/android/ConnectivityChangeBroadcastReceiver.java" target-dir="src/com/typicalfoobar/lightswitch/cordovaplugin" />
+        <source-file src="src/android/HttpRequest.java" target-dir="src/com/typicalfoobar/lightswitch/cordovaplugin" />
+        <source-file src="src/android/LocalStorage.java" target-dir="src/com/typicalfoobar/lightswitch/cordovaplugin" />
+        <source-file src="src/android/HandleConnectivityChangeRunnable.java" target-dir="src/com/typicalfoobar/lightswitch/cordovaplugin" />
+        <source-file src="src/android/ClientSettings.java" target-dir="src/com/typicalfoobar/lightswitch/cordovaplugin" />
+        <source-file src="src/android/WifiStateInfo.java" target-dir="src/com/typicalfoobar/lightswitch/cordovaplugin" />
+    </platform>
+</plugin>

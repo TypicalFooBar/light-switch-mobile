@@ -1,4 +1,4 @@
-package com.typicalfoobar.lightswitch;
+package com.typicalfoobar.lightswitch.cordovaplugin;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

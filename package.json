@@ -22,7 +22,8 @@
     "cordova-plugin-statusbar",
     "ionic-plugin-keyboard",
     ".\\light-switch-service-plugin\\",
-    ".\\light-switch-service-plugin"
+    ".\\light-switch-service-plugin",
+    ".\\light-switch-cordova-plugin"
   ],
   "cordovaPlatforms": [
     "android"
